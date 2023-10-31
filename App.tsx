@@ -2,6 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {EventsScreen} from "./screens/EventsScreen";
+import Login from './components/Sign/SignUp';
 import {initializeApp} from 'firebase/app';
 import {Provider} from "react-redux";
 import {store} from "./store/store";
