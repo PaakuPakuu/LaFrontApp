@@ -14,8 +14,6 @@ export function EventTypeBadge({eventCategory}: Props) {
         'Interne': 'purple',
     }
 
-    console.log(eventCategory)
-
     return (
         <Badge style={{backgroundColor: EventTypeBadgeColors[eventCategory]}}>{eventCategory}</Badge>
     )

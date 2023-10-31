@@ -1,15 +1,14 @@
 import {Card} from "react-native-paper";
-import {Event} from "../../models/Event";
+import {TypeEvent} from "../../models/TypeEvent";
 import {ImageBackground, View, StyleSheet} from "react-native";
 import {EventTypeBadge} from "./EventTypeBadge";
 import { Text } from 'react-native-paper';
 import {EventTimeLeft} from "./EventTimeLeft";
 
-type Props = Event;
+type Props = TypeEvent;
 
 export function EventCard(event: Props) {
-
-    console.log(event.picture)
+    const eventDate = new Date(event.date)
 
     return (
         <Card mode={"outlined"}>
@@ -37,8 +36,8 @@ export function EventCard(event: Props) {
             </View>
 
             <View>
-                <Text>{event.date.getDate()} {event.date.getMonth()} {event.date.getFullYear()},
-                    à {event.date.getHours()}:{event.date.getMinutes()}</Text>
+                <Text>{eventDate.getDate()} {eventDate.getMonth()} {eventDate.getFullYear()},
+                    à {eventDate.getHours()}:{eventDate.getMinutes()}</Text>
 
                 <EventTimeLeft />
             </View>
