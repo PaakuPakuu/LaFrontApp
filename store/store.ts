@@ -1,15 +1,13 @@
 import {configureStore} from "@reduxjs/toolkit";
-import {movieApi} from "./movieAPi";
+import {firestoreApi} from "./firestoreApi";
 import {setupListeners} from "@reduxjs/toolkit/query";
-import likeReducer from "./likesSlice";
 
 export const store = configureStore({
     reducer: {
-        [movieApi.reducerPath]: movieApi.reducer,
-        likes: likeReducer
+        [firestoreApi.reducerPath]: firestoreApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(movieApi.middleware),
+        getDefaultMiddleware().concat(firestoreApi.middleware),
 })
 
 setupListeners(store.dispatch)

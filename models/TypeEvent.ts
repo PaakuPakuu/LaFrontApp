@@ -2,10 +2,10 @@ import {Participation} from "./Participation";
 import {Commentary} from "./Commentary";
 import {EnumEventCategory} from "../enums/EnumEventCategory";
 
-export type Event = {
+export type TypeEvent = {
     id: string,
     title: string,
-    date: Date,
+    date: string,
     participations: Participation[],
     commentaries: Commentary[],
     description: string,
