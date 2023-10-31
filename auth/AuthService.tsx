@@ -1,16 +1,28 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
+import  fire  from '../firebaseConfig'
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
-const auth = getAuth();
+const db = getFirestore(fire);
+const auth = getAuth(fire);
 
-// create an account of user
 export const signup = async (email: string, password: string) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    const user = userCredential.user;
+
+    const userRef = collection(db, 'user');
+    const newUser = {
+      uid: user.uid,
+      email: user.email,
+    };
+    await addDoc(userRef, newUser);
+
+    return user;
   } catch (error) {
     throw error;
   }
 };
+
 
 // connect a user
 export const login = async (email: string, password: string) => {
@@ -39,3 +51,4 @@ export const resetPassword = async (email: string) => {
     throw error;
   }
 };
+
