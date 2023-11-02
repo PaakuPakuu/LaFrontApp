@@ -13,7 +13,9 @@ import { EventScreen } from "./screens/EventScreen";
 
 type StackType = {
     EventsScreen: undefined,
-    EventScreen: string
+    EventScreen: string,
+    EventCreationScreen: undefined
+    ProfileScreen: undefined
 }
 
 export default function App() {
@@ -37,6 +39,8 @@ export default function App() {
                     <Stack.Navigator initialRouteName="EventsScreen">
                         <Stack.Screen name="EventsScreen" component={EventsScreen} />
                         <Stack.Screen name="EventScreen" component={EventScreen} />
+                        <Stack.Screen name="EventCreationScreen" component={EventCreationScreen} />
+                        <Stack.Screen name='ProfileScreen' component={ProfileScreen} />
                     </Stack.Navigator>
                 </NavigationContainer>
                 :

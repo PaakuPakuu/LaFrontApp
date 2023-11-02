@@ -36,6 +36,7 @@ export const supabaseApi = createApi({
                     .from('Comment')
                     .select('text, created_at, author')
                     .eq('event', eventId)
+                    .eq('event', eventId)
 
 
                 return { data: Events as Tables<"Comment">[] };
@@ -66,8 +67,32 @@ export const supabaseApi = createApi({
 
                 return { data: Events as Tables<"Event">[] };
             }
-
         }),
+        createEvent: builder.mutation<void, EventType>({
+            async queryFn(eventToInsert) {
+                const { data, error } = await supabase
+                    .from('Event')
+                    .insert(eventToInsert)
+                    .select()
+
+                console.log(error)
+
+
+                return { data: data, error: error }
+            }
+        }),
+        addComment: builder.mutation<void, CommentType>({
+            async queryFn(commentToInsert) {
+                const { data, error } = await supabase
+                    .from('Comment')
+                    .insert(commentToInsert)
+                    .select()
+
+                console.log(error)
+
+                return { data: data, error: error }
+            }
+        })
     })
 })
 
@@ -76,5 +101,7 @@ export const {
     useGetCurrentProfileQuery,
     useGetUserEventsQuery,
     useGetOneEventQuery,
-    useFetchAllCommentariesPerEventQuery
+    useFetchAllCommentariesPerEventQuery,
+    useCreateEventMutation,
+    useAddCommentMutation
 } = supabaseApi
