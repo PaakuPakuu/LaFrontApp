@@ -10,12 +10,14 @@ import {Session} from "@supabase/supabase-js";
 import Login from "./screens/Login";
 import {EventScreen} from "./screens/EventScreen";
 import {EventCreationScreen} from "./screens/EventCreationScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 
 
 type StackType = {
     EventsScreen: undefined,
     EventScreen: string,
     EventCreationScreen: undefined
+    ProfileScreen: undefined
 }
 
 export default function App() {
@@ -40,6 +42,7 @@ export default function App() {
                         <Stack.Screen name="EventsScreen" component={EventsScreen}/>
                         <Stack.Screen name="EventScreen" component={EventScreen}/>
                         <Stack.Screen name="EventCreationScreen" component={EventCreationScreen}/>
+                        <Stack.Screen name='ProfileScreen' component={ProfileScreen} />
                     </Stack.Navigator>
                 </NavigationContainer>
                 :
