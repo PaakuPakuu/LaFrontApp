@@ -13,9 +13,9 @@ export function EventCard({ event }: Props) {
             <View style={styles.headerContainer}>
                 <View style={styles.titlesContainer}>
                     <Text style={styles.subTitle}>Votre prochain évènement</Text>
-                    <Text style={styles.title}>{event.title}</Text>
+                    <Text style={styles.title}>{event?.title}</Text>
                 </View>
-                <CategoryBadge category={event.category} />
+                <CategoryBadge category={event?.category} />
             </View>
 
         </View>

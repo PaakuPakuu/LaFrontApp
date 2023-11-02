@@ -24,7 +24,6 @@ export function EventComments({eventId}: Props) {
 
     const [addComment] = useAddCommentMutation()
 
-
     return (
         <>
             <Text>

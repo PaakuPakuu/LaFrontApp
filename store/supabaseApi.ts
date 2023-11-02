@@ -90,6 +90,17 @@ export const supabaseApi = createApi({
 
                 return { data: data as Tables<"Comment"> }
             }
+        }),
+        createProfile: builder.mutation<Tables<"Profile">, Tables<"Profile">>({
+            async queryFn(profileToCreate) {
+                const { data } = await supabase
+                    .from('Profile')
+                    .insert(profileToCreate)
+                    .select()
+                    .single();
+
+                return { data: data as Tables<"Profile"> }
+            }
         })
     })
 })
@@ -101,5 +112,6 @@ export const {
     useGetOneEventQuery,
     useFetchAllCommentariesPerEventQuery,
     useCreateEventMutation,
-    useAddCommentMutation
+    useAddCommentMutation,
+    useCreateProfileMutation
 } = supabaseApi

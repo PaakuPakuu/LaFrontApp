@@ -1,17 +1,18 @@
 import {Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import {useCreateEventMutation} from "../store/supabaseApi";
-import {useState} from "react";
-import {EventType} from "../models/EventType";
+import {Tables} from "../database.types";
 
 export function EventCreationScreen() {
-    const tempData: EventType = {
+    const tempData: Tables<"Event"> = {
         title: "Generated",
         date: new Date().toDateString(),
         description: "Description de ouf guedin",
         address: "test",
         picture: "https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg",
-        creator: 'f9d33be5-ccc0-4540-9358-5562abcc932a',
-        created_at: new Date().toString()
+        created_at: new Date().toString(),
+        category: 'contract',
+        user: '',
+        id: 0
     }
 
     const [createEvent, {isLoading}] = useCreateEventMutation()

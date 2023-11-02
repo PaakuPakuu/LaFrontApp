@@ -1,51 +1,118 @@
-import { NavigationContainer, ParamListBase } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { EventsScreen } from "./screens/EventsScreen";
-import { Provider } from "react-redux";
-import { store } from "./store/store";
-import { supabase } from "./supabaseConfig";
-import { useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
-import Login from "./screens/Login";
-import { EventScreen } from "./screens/EventScreen";
-import { EventCreationScreen } from './screens/EventCreationScreen';
+import {StyleSheet} from 'react-native';
+import {NavigationContainer, ParamListBase} from "@react-navigation/native";
+import {EventsScreen} from "./screens/EventsScreen";
+import {Provider} from "react-redux";
+import {store} from "./store/store";
+import React, {useEffect, useState} from "react";
+import LoginScreen from "./screens/LoginScreen";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import {supabase} from "./supabaseConfig";
+import {Session} from "@supabase/supabase-js";
 import ProfileScreen from './screens/ProfileScreen';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {MaterialCommunityIcons, MaterialIcons} from '@expo/vector-icons';
+import {EventCreationScreen} from "./screens/EventCreationScreen";
+import {SignInScreen} from "./screens/SignInScreen";
+import {useGetCurrentProfileQuery} from "./store/supabaseApi";
+import {CreateProfileScreen} from "./screens/CreateProfileScreen";
 
-
-interface StackType extends ParamListBase {
+export interface RootStackParamList extends ParamListBase {
     EventsScreen: undefined,
-    EventScreen: { eventId: string },
+    EventScreen: undefined,
+    LoginScreen: undefined,
+    ProfileScreen: undefined,
+    EventCreationScreen: undefined,
+    InfosProfilScreen: undefined,
+}
+
+export interface AuthStackParamList extends ParamListBase {
+
+}
+
+export interface MainTabParamList extends ParamListBase {
+    ProfilScreen: undefined,
+    EventsScreen: undefined,
+    EventScreen: {
+        id: number
+    },
     EventCreationScreen: undefined
-    ProfileScreen: undefined
+    InfosProfilScreen: undefined,
 }
 
 export default function App() {
-    const Stack = createNativeStackNavigator<StackType>();
     const [session, setSession] = useState<Session | null>(null)
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabase.auth.getSession().then(({data: {session}}) => {
             setSession(session)
         })
 
         supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session)
         })
-    }, [])
+    }, []);
+
+
+    const RootStack = createNativeStackNavigator<RootStackParamList>();
+    const MainTab = createBottomTabNavigator<RootStackParamList>();
+
+
+    function MainStack() {
+        const {data, isFetching, isLoading} = useGetCurrentProfileQuery();
+
+        return (
+            <MainTab.Navigator initialRouteName="EventsScreen">
+
+                {(!isLoading && !data) ? <>
+                        <RootStack.Screen name="CreateProfileScreen" component={CreateProfileScreen}/>
+                    </> :
+                    <>
+                        <MainTab.Screen name="ProfilScreen" component={ProfileScreen} options={{
+                            tabBarLabel: "Profil",
+                            tabBarIcon: () => (
+                                <MaterialCommunityIcons name="account" size={24} color="black"/>
+                            ),
+                        }}
+                        />
+                        <MainTab.Screen name="EventsScreen" component={EventsScreen}
+                                        options={{
+                                            tabBarLabel: "Événements",
+                                            tabBarIcon: () => (
+                                                <MaterialIcons name="event-note" size={24} color="black"/>
+                                            ),
+                                        }}
+                        />
+                        <MainTab.Screen name="EventCreationScreen" component={EventCreationScreen}/>
+                    </>}
+
+            </MainTab.Navigator>
+        )
+    }
+
     return (
         <Provider store={store}>
-            {session && session.user ?
-
-                <NavigationContainer>
-                    <Stack.Navigator initialRouteName="EventsScreen">
-                        <Stack.Screen name="EventsScreen" component={EventsScreen} />
-                        <Stack.Screen name="EventScreen" component={EventScreen} />
-                        <Stack.Screen name="EventCreationScreen" component={EventCreationScreen} />
-                        <Stack.Screen name='ProfileScreen' component={ProfileScreen} />
-                    </Stack.Navigator>
-                </NavigationContainer>
-                :
-                <Login />}
+            <NavigationContainer>
+                <RootStack.Navigator>
+                    {session && session.user ?
+                        <>
+                            <RootStack.Screen name="MainStack" component={MainStack}/>
+                        </>
+                        : (<>
+                            <RootStack.Screen name="LoginScreen" component={LoginScreen}/>
+                            <RootStack.Screen name="SignIn" component={SignInScreen}/>
+                        </>)
+                    }
+                </RootStack.Navigator>
+            </NavigationContainer>
         </Provider>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});

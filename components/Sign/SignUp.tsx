@@ -14,7 +14,6 @@ export default function SignUP() {
     const handleSignUp = async () => {
         try {
             const user = await AuthService.signup(email, password);
-            console.log("Utilisateur connecté :", user);
         } catch (error) {
             console.error("Erreur de connexion :", error);
         }
