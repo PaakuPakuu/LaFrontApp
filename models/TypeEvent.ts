@@ -1,13 +1,13 @@
 import { Participation } from "./Participation";
-import { Commentary } from "./Commentary";
+import { CommentType } from "./CommentType";
 import { EnumEventCategory } from "../enums/EnumEventCategory";
 
 export type TypeEvent = {
     id: string,
     title: string,
-    date: Date,
+    date: string,
     participations: Participation[],
-    commentaries: Commentary[],
+    commentaries: CommentType[],
     description: string,
     address: string,
     category: EnumEventCategory,
