@@ -1,9 +1,9 @@
-import { TypeEvent } from "../../models/TypeEvent";
 import { View, StyleSheet, Text } from "react-native";
 import { CategoryBadge } from "../badge/CategoryBadge";
+import { Tables } from "../../database.types";
 
 interface Props {
-    event: TypeEvent
+    event: Tables<"Event">;
 }
 
 export function EventCard({ event }: Props) {
