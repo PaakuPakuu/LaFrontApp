@@ -1,5 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, ParamListBase } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { EventsScreen } from "./screens/EventsScreen";
 import { Provider } from "react-redux";
@@ -11,9 +10,9 @@ import Login from "./screens/Login";
 import { EventScreen } from "./screens/EventScreen";
 
 
-type StackType = {
+interface StackType extends ParamListBase {
     EventsScreen: undefined,
-    EventScreen: string
+    EventScreen: { event: TypeEvent }
 }
 
 export default function App() {
