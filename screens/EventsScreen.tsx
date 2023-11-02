@@ -1,34 +1,22 @@
-import {FlatList} from "react-native";
+import {FlatList, View, Text} from "react-native";
 import {EventCard} from "../components/Events/EventCard";
-import {TypeEvent} from "../models/TypeEvent";
-import {EnumEventCategory} from "../enums/EnumEventCategory";
-import {useFetchAllEventsQuery} from "../store/firestoreApi";
+
+import {useFetchAllEventsQuery} from "../store/supabaseApi";
 
 export function EventsScreen() {
     const {data, isFetching, isLoading} = useFetchAllEventsQuery();
 
     return (
-        <>
+        <View>
             {!isLoading && <FlatList
-            data={data}
-            numColumns={1}
-            renderItem={({item}) =>
-                <EventCard {...item} />
+                data={data}
+                numColumns={1}
+                renderItem={({item}) =>
+                    <EventCard {...item} />
+                }
+                keyExtractor={item => item.id.toString()}
+            />
             }
-            keyExtractor={item => item.id.toString()}
-        >
-
-        </FlatList>}
-
-        </>
+        </View>
     )
-}
-
-const PAUL = {
-    id: 'rgre',
-    name: 'Paul',
-    emailAddress: 'lol',
-    nickname: 'popol',
-    avatar: 'lolilol',
-    password: '1243456'
 }
