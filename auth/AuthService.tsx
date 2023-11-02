@@ -1,9 +1,9 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'firebase/auth';
-import  fire  from '../firebaseConfig'
+import  firebase  from '../firebaseConfig'
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
-const db = getFirestore(fire);
-const auth = getAuth(fire);
+const db = getFirestore(firebase);
+const auth = getAuth(firebase);
 
 export const signup = async (email: string, password: string) => {
   try {

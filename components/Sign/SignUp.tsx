@@ -19,7 +19,7 @@ export default function SignUP() {
             console.error("Erreur de connexion :", error);
         }
     };
-
+ 
     return (
             <View style={styles.container}>
                 <Image style={styles.image} source={require("../../assets/favicon.png")} />
@@ -33,40 +33,21 @@ export default function SignUP() {
                 </View>
 
                 <View style={styles.inputView}>
-
                     <TextInput
-
                         style={styles.TextInput}
-
                         placeholder="Password."
-
                         placeholderTextColor="#003f5c"
-
                         secureTextEntry={true}
-
                         onChangeText={(password) => setPassword(password)} />
-
                 </View>
-
                 <TouchableOpacity>
-
                     <Text style={styles.forgot_button}>Forgot Password?</Text>
-
                 </TouchableOpacity>
-
-                {/* <TouchableOpacity style={styles.loginBtn}>
-
-                    <Text style={styles.loginText}>LOGIN</Text>
-
-                </TouchableOpacity> */}
                     <TouchableOpacity style={styles.loginBtn} onPress={handleSignUp}>
                         <Text style={styles.loginText}>SIGN UP</Text>
                     </TouchableOpacity>
-
             </View>
-
     );
-
 }
 
 const styles = StyleSheet.create({
