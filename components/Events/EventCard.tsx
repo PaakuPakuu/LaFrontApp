@@ -1,49 +1,33 @@
-import {EventType} from "../../models/EventType";
-import {ImageBackground, View, StyleSheet, TouchableOpacity} from "react-native";
-import {EventTypeBadge} from "./EventTypeBadge";
-import {Text} from 'react-native-paper';
-import {EventTimeLeft} from "./EventTimeLeft";
-import {useNavigation} from "@react-navigation/native";
+import { View, StyleSheet, Text } from "react-native";
+import { CategoryBadge } from "../badge/CategoryBadge";
+import { Tables } from "../../database.types";
 
+interface Props {
+    event: Tables<"Event">;
+}
 
-type Props = EventType;
-
-export function EventCard(event: Props) {
-    const eventDate = new Date(event.date)
-    const navigation = useNavigation();
+export function EventCard({ event }: Props) {
 
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('EventScreen', event.id)}>
-            <ImageBackground resizeMethod={"resize"} source={{uri: event.picture}}
-                             style={{flex: 1, justifyContent: 'center'}}>
-                <View style={{}}>
-                    <View>
-                        <Text variant="titleSmall">Votre prochain évènement : </Text>
-                        <Text variant="titleLarge"> {event.title} </Text>
-                    </View>
-
-                    <View>
-                        <EventTypeBadge eventCategory={event.category}/>
-                    </View>
-                </View>
-
+        <View style={styles.container}>
+            <View style={styles.headerContainer}>
                 <View>
-                    <Text>Logo</Text>
-                    <Text>{event.address}</Text>
+                    <Text>Votre prochain évènement</Text>
+                    <Text>{event.title}</Text>
                 </View>
+                <CategoryBadge category={event.category} />
+            </View>
 
-                <View>
-                    <Text>
-                        {event?.commentaries?.length} Commentaire(s)
-                    </Text>
-                </View>
-
-                <View>
-                    <Text>{eventDate.getDate()} {eventDate.getMonth()} {eventDate.getFullYear()},
-                        à {eventDate.getHours()}:{eventDate.getMinutes()}</Text>
-
-                    <EventTimeLeft/>
-                </View>
-            </ImageBackground>
-        </TouchableOpacity>)
+        </View>
+    )
 }
+
+const styles = StyleSheet.create({
+    container: {
+
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    }
+});
