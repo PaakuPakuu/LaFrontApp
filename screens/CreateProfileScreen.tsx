@@ -2,7 +2,7 @@ import {Alert, Button, StyleSheet, TextInput, View} from "react-native";
 import React, {useState} from "react";
 import {Tables} from "../database.types";
 import {supabase} from "../supabaseConfig";
-import {useCreateEventMutation, useCreateProfileMutation} from "../store/supabaseApi";
+import {useCreateProfileMutation} from "../store/supabaseApi";
 import {useNavigation} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {MainTabParamList} from "../App";
@@ -29,18 +29,12 @@ export function CreateProfileScreen() {
 
             await createProfile(profileData);
 
-            console.log('étape 1')
-
             if (!isLoading) {
-                console.log('étape 2')
-
                 navigation.navigate('MainStack', {screen: 'EventsScreen'})
             }
         } else {
             Alert.alert('Euh wtf ?')
         }
-
-
     }
 
     return (<>
