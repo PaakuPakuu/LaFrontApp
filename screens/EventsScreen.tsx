@@ -1,4 +1,4 @@
-import { FlatList, View, Text } from "react-native";
+import { FlatList, View, Text, StyleSheet } from "react-native";
 import { EventCard } from "../components/Events/EventCard";
 
 import { useFetchAllEventsQuery } from "../store/supabaseApi";
@@ -8,7 +8,7 @@ export function EventsScreen() {
     const { data, isFetching, isLoading, isError } = useFetchAllEventsQuery();
 
     return (
-        <View>
+        <View style={styles.container}>
             {!isLoading && data && (
                 <>
                     <EventCard event={data[0]} />
@@ -29,3 +29,9 @@ export function EventsScreen() {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 16,
+    }
+});
