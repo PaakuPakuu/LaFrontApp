@@ -4,21 +4,13 @@ import React, {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {MainTabParamList} from "../App";
-import {ProfileType} from "../models/ProfileType";
+import {Tables} from "../database.types";
 
 export function SignInScreen() {
     const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const [profileData, setProfileData] = useState<ProfileType>({
-        created_at: new Date().toString(),
-        firstname: "",
-        instruments: undefined,
-        lastname: "",
-        nickname: "",
-        user: null
-    });
 
     const navigation = useNavigation<NativeStackNavigationProp<MainTabParamList>>();
 
@@ -35,21 +27,14 @@ export function SignInScreen() {
 
         if (error) Alert.alert(error.message)
 
-
-        if (!session) Alert.alert('Please check your inbox for email verification!')
+        if (!session) Alert.alert('Regarde ta boîte mail pour valider ton adresse !')
 
         if (error) {
             Alert.alert(error.message);
         } else {
-            Alert.alert('Inscription réussie! Veuillez saisir les informations supplémentaires.');
-
-            navigation.navigate('InfosProfilScreen');
+            navigation.navigate('LoginScreen');
         }
         setLoading(false)
-    }
-
-    function handleTextChange() {
-
     }
 
 
@@ -71,36 +56,6 @@ export function SignInScreen() {
                     value={password}
                     secureTextEntry={true}
                     placeholder="Mot de passe"
-                    autoCapitalize={'none'}
-                />
-            </View>
-            <View style={styles.verticallySpaced}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(value) => setProfileData(prevState => ({...prevState, firstname: value}))}
-                    value={profileData.firstname || ''}
-                    secureTextEntry={true}
-                    placeholder="Prénom"
-                    autoCapitalize={'none'}
-                />
-            </View>
-            <View style={styles.verticallySpaced}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(value) => setProfileData(prevState => ({...prevState, firstname: value}))}
-                    value={profileData.lastname || ''}
-                    secureTextEntry={true}
-                    placeholder="Nom de famille"
-                    autoCapitalize={'none'}
-                />
-            </View>
-            <View style={styles.verticallySpaced}>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(value) => setProfileData(prevState => ({...prevState, firstname: value}))}
-                    value={profileData.nickname || ''}
-                    secureTextEntry={true}
-                    placeholder="Surnom"
                     autoCapitalize={'none'}
                 />
             </View>
