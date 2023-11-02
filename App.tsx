@@ -38,7 +38,7 @@ export default function App() {
             {session && session.user ?
 
                 <NavigationContainer>
-                    <Stack.Navigator initialRouteName="ProfileScreen">
+                    <Stack.Navigator initialRouteName="EventsScreen">
                         <Stack.Screen name="EventsScreen" component={EventsScreen}/>
                         <Stack.Screen name="EventScreen" component={EventScreen}/>
                         <Stack.Screen name="EventCreationScreen" component={EventCreationScreen}/>
