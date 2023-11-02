@@ -1,70 +1,90 @@
-import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import { TypeEvent } from "../models/TypeEvent"
 import { supabase } from "../supabaseConfig";
-import { Tables } from '../database.types';
+import { ProfileType } from "../models/ProfileType";
+import { CommentType } from "../models/CommentType";
+
+
+type Props = {
+    data: ProfileType
+}
 
 export const supabaseApi = createApi({
     reducerPath: 'supabaseApi',
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Event'],
     endpoints: (builder) => ({
-        fetchAllEvents: builder.query<Tables<"Event">[], void>({
-            queryFn: async () => {
-                const { data: Events } = await supabase
+        fetchAllEvents: builder.query<TypeEvent[], void>({
+            async queryFn() {
+
+                let { data: Events } = await supabase
                     .from('Event')
                     .select()
 
-                return { data: Events as Tables<"Event">[] };
+                return { data: Events }
             },
         }),
-        getOneEvent: builder.query<Tables<"Event">, number>({
+        fetchAllEventsWithParticipations: builder.query<TypeEvent[], void>({
+            async queryFn() {
+
+                let { data: Events } = await supabase
+                    .from('Event')
+                    .select('*, Participation(*)')
+
+                console.log("Evenements : " + Events![0].title);
+
+                return { data: Events }
+            },
+        }),
+        getOneEvent: builder.query<TypeEvent, number>({
             async queryFn(id) {
 
-                const { data } = await supabase
+                let { data: Event } = await supabase
                     .from('Event')
                     .select()
                     .eq('id', id)
-                    .single();
 
-                return { data: data as Tables<"Event"> };
+                return { data: Event }
             },
         }),
-        fetchAllCommentariesPerEvent: builder.query<Tables<"Comment">[], string>({
+        fetchAllCommentariesPerEvent: builder.query<CommentType[], string>({
             async queryFn(eventId) {
 
-                let { data: Events } = await supabase
+                let { data: Comments } = await supabase
                     .from('Comment')
                     .select('text, created_at, author')
                     .eq('event', eventId)
 
 
-                return { data: Events as Tables<"Comment">[] };
+                return { data: Comments }
             },
         }),
-        getCurrentProfile: builder.query<Tables<"Profile">, void>({
+        getCurrentProfile: builder.query<ProfileType, void>({
             async queryFn() {
                 const { data: { user } } = await supabase.auth.getUser()
 
-                let { data: Profile } = await supabase
-                    .from('Profile')
-                    .select()
-                    .eq('user', user!.id)
-                    .single()
+                if (user?.id) {
 
-                return { data: Profile as Tables<"Profile"> }
+                    let { data: Profile } = await supabase
+                        .from('Profile')
+                        .select()
+                        .eq('user', user.id)
 
+                    return { data: Profile[0] }
+                }
             }
         }),
-        getUserEvents: builder.query<Tables<"Event">[], void>({
+        getUserEvents: builder.query<TypeEvent[], void>({
             async queryFn() {
                 const { data: { user } } = await supabase.auth.getUser()
 
                 let { data: Events } = await supabase
                     .from('Event')
                     .select()
-                    .eq('user', user!.id)
+                    .eq('creator', user.id)
 
-                return { data: Events as Tables<"Event">[] };
+                return { data: Events }
             }
 
         }),
@@ -73,6 +93,7 @@ export const supabaseApi = createApi({
 
 export const {
     useFetchAllEventsQuery,
+    useFetchAllEventsWithParticipationsQuery,
     useGetCurrentProfileQuery,
     useGetUserEventsQuery,
     useGetOneEventQuery,
