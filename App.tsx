@@ -1,5 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, ParamListBase } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { EventsScreen } from "./screens/EventsScreen";
 import { Provider } from "react-redux";
@@ -9,11 +8,13 @@ import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import Login from "./screens/Login";
 import { EventScreen } from "./screens/EventScreen";
+import { EventCreationScreen } from './screens/EventCreationScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 
-type StackType = {
+interface StackType extends ParamListBase {
     EventsScreen: undefined,
-    EventScreen: string,
+    EventScreen: { eventId: string },
     EventCreationScreen: undefined
     ProfileScreen: undefined
 }

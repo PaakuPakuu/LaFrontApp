@@ -68,29 +68,27 @@ export const supabaseApi = createApi({
                 return { data: Events as Tables<"Event">[] };
             }
         }),
-        createEvent: builder.mutation<void, EventType>({
+        createEvent: builder.mutation<Tables<"Event">, Tables<"Event">>({
             async queryFn(eventToInsert) {
-                const { data, error } = await supabase
+                const { data } = await supabase
                     .from('Event')
                     .insert(eventToInsert)
                     .select()
+                    .single()
 
-                console.log(error)
 
-
-                return { data: data, error: error }
+                return { data: data as Tables<"Event"> }
             }
         }),
-        addComment: builder.mutation<void, CommentType>({
+        addComment: builder.mutation<Tables<"Comment">, Tables<"Comment">>({
             async queryFn(commentToInsert) {
-                const { data, error } = await supabase
+                const { data } = await supabase
                     .from('Comment')
                     .insert(commentToInsert)
                     .select()
+                    .single();
 
-                console.log(error)
-
-                return { data: data, error: error }
+                return { data: data as Tables<"Comment"> }
             }
         })
     })
