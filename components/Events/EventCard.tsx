@@ -1,4 +1,4 @@
-import {TypeEvent} from "../../models/TypeEvent";
+import {EventType} from "../../models/EventType";
 import {ImageBackground, View, StyleSheet, TouchableOpacity} from "react-native";
 import {EventTypeBadge} from "./EventTypeBadge";
 import {Text} from 'react-native-paper';
@@ -6,7 +6,7 @@ import {EventTimeLeft} from "./EventTimeLeft";
 import {useNavigation} from "@react-navigation/native";
 
 
-type Props = TypeEvent;
+type Props = EventType;
 
 export function EventCard(event: Props) {
     const eventDate = new Date(event.date)

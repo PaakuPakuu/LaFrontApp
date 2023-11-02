@@ -9,11 +9,13 @@ import {useEffect, useState} from "react";
 import {Session} from "@supabase/supabase-js";
 import Login from "./screens/Login";
 import {EventScreen} from "./screens/EventScreen";
+import {EventCreationScreen} from "./screens/EventCreationScreen";
 
 
 type StackType = {
     EventsScreen: undefined,
-    EventScreen: string
+    EventScreen: string,
+    EventCreationScreen: undefined
 }
 
 export default function App() {
@@ -37,6 +39,7 @@ export default function App() {
                     <Stack.Navigator initialRouteName="EventsScreen">
                         <Stack.Screen name="EventsScreen" component={EventsScreen}/>
                         <Stack.Screen name="EventScreen" component={EventScreen}/>
+                        <Stack.Screen name="EventCreationScreen" component={EventCreationScreen}/>
                     </Stack.Navigator>
                 </NavigationContainer>
                 :

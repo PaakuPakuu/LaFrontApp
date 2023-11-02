@@ -6,8 +6,6 @@ export function EventScreen() {
     const route = useRoute()
     const id: string = route.params as unknown as string;
 
-    const {data, isFetching, isLoading} = useGetOneEventQuery(id);
-
 
     return(
         <>

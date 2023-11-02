@@ -1,10 +1,12 @@
-import {FlatList, View, Text} from "react-native";
+import {FlatList, View, Text, TouchableOpacity} from "react-native";
 import {EventCard} from "../components/Events/EventCard";
 
 import {useFetchAllEventsQuery} from "../store/supabaseApi";
+import {useNavigation} from "@react-navigation/native";
 
 export function EventsScreen() {
     const {data, isFetching, isLoading} = useFetchAllEventsQuery();
+    const navigation = useNavigation();
 
     return (
         <View>
@@ -17,6 +19,13 @@ export function EventsScreen() {
                 keyExtractor={item => item.id.toString()}
             />
             }
+
+            <TouchableOpacity
+                style={{backgroundColor: 'blue'}}
+                onPress={() => navigation.navigate('EventCreationScreen')}
+            >
+                <Text>Créer un évènement</Text>
+            </TouchableOpacity>
         </View>
     )
 }
