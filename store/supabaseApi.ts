@@ -87,6 +87,18 @@ export const supabaseApi = createApi({
 
                 return {data: data, error: error}
             }
+        }),
+        addComment: builder.mutation<void, CommentType>({
+            async queryFn(commentToInsert) {
+                const {data, error} = await supabase
+                    .from('Comment')
+                    .insert(commentToInsert)
+                    .select()
+
+                console.log(error)
+
+                return {data: data, error: error}
+            }
         })
     })
 })
@@ -97,5 +109,6 @@ export const {
     useGetUserEventsQuery,
     useGetOneEventQuery,
     useFetchAllCommentariesPerEventQuery,
-    useCreateEventMutation
+    useCreateEventMutation,
+    useAddCommentMutation
 } = supabaseApi

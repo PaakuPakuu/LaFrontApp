@@ -4,8 +4,7 @@ import {EventComments} from "../components/Event/EventComments";
 
 export function EventScreen() {
     const route = useRoute()
-    const id: string = route.params as unknown as string;
-
+    const id: number = route.params as unknown as number;
 
     return(
         <>
