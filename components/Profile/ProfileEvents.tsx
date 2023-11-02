@@ -1,5 +1,5 @@
 import {FlatList, Text, View} from "react-native";
-import {TypeEvent} from "../../models/TypeEvent"
+import {EventType} from "../../models/EventType"
 import {useGetUserEventsQuery} from "../../store/supabaseApi";
 
 export function ProfileEvents() {

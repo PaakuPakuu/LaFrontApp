@@ -1,6 +1,6 @@
 import {createApi, fakeBaseQuery} from '@reduxjs/toolkit/query/react'
 
-import {TypeEvent} from "../models/TypeEvent"
+import {EventType} from "../models/EventType"
 import {supabase} from "../supabaseConfig";
 import {ProfileType} from "../models/ProfileType";
 import {CommentType} from "../models/CommentType";
@@ -15,7 +15,7 @@ export const supabaseApi = createApi({
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Event'],
     endpoints: (builder) => ({
-        fetchAllEvents: builder.query<Array<TypeEvent>, void>({
+        fetchAllEvents: builder.query<Array<EventType>, void>({
             async queryFn() {
 
                 let {data: Events} = await supabase
@@ -25,7 +25,7 @@ export const supabaseApi = createApi({
                 return {data: Events}
             },
         }),
-        getOneEvent: builder.query<TypeEvent, number>({
+        getOneEvent: builder.query<EventType, number>({
             async queryFn(id) {
 
                 let {data: Event} = await supabase
@@ -42,7 +42,7 @@ export const supabaseApi = createApi({
                 let {data: Comments} = await supabase
                     .from('Comment')
                     .select('text, created_at, author')
-                    .eq('event',eventId)
+                    .eq('event', eventId)
 
 
                 return {data: Comments}
@@ -63,7 +63,7 @@ export const supabaseApi = createApi({
                 }
             }
         }),
-        getUserEvents: builder.query <TypeEvent[], void>({
+        getUserEvents: builder.query <EventType[], void>({
             async queryFn() {
                 const {data: {user}} = await supabase.auth.getUser()
 
@@ -74,8 +74,20 @@ export const supabaseApi = createApi({
 
                 return {data: Events}
             }
-
         }),
+        createEvent: builder.mutation<void, EventType>({
+            async queryFn(eventToInsert) {
+                const {data, error} = await supabase
+                    .from('Event')
+                    .insert(eventToInsert)
+                    .select()
+
+                console.log(error)
+
+
+                return {data: data, error: error}
+            }
+        })
     })
 })
 
@@ -84,5 +96,6 @@ export const {
     useGetCurrentProfileQuery,
     useGetUserEventsQuery,
     useGetOneEventQuery,
-    useFetchAllCommentariesPerEventQuery
+    useFetchAllCommentariesPerEventQuery,
+    useCreateEventMutation
 } = supabaseApi
