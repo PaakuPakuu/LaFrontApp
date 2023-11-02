@@ -11,12 +11,11 @@ export function EventsScreen() {
         <View style={styles.container}>
             {!isLoading && data && (
                 <>
-                    <EventCard event={data[0]} />
                     <FlatList
                         data={data}
                         numColumns={1}
                         renderItem={({ item }) =>
-                            <EventItem event={item} />
+                            <EventCard event={item} />
                         }
                         keyExtractor={item => item.id.toString()}
                     />
