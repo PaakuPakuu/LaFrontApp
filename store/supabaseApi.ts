@@ -83,7 +83,8 @@ export const supabaseApi = createApi({
                 console.log(eventToInsert, error)
 
                 return { data: data as TablesInsert<"Event"> }
-            }
+            },
+            invalidatesTags: ['Event']
         }),
         addComment: builder.mutation<EventComment, TablesInsert<"Comment">>({
             async queryFn(commentToInsert) {
