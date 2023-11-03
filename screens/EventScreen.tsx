@@ -4,7 +4,7 @@ import { UserEvent } from "../models/customModels";
 
 export function EventScreen() {
     const route = useRoute()
-    const event = route.params as UserEvent
+    const  event = route.params as UserEvent
 
     return (
         <>
