@@ -1,21 +1,18 @@
 import { FlatList, View, Text, StyleSheet, RefreshControl } from "react-native";
 
-import { supabaseApi, useFetchAllEventsQuery, useGetCurrentProfileQuery } from "../store/supabaseApi";
+import { useFetchAllEventsQuery, useGetCurrentProfileQuery } from "../store/supabaseApi";
 import { EventItem } from "../components/Events/EventItem";
 import { EventCard } from "../components/Events/EventCard";
 import { EditProfileModal } from "../components/editProfileModal/EditProfileModal";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../hooks";
-import { supabase } from "../supabaseConfig";
 
 export function EventsScreen() {
-    const { data: events, isError, isFetching: isEventFetching, refetch } = useFetchAllEventsQuery();
+    const { data: events, isError, isLoading: isEventLoading, refetch } = useFetchAllEventsQuery();
     const { data: profile, isFetching: isProfileFetching } = useGetCurrentProfileQuery();
 
     const [refreshing, setRefreshing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-
-    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (!profile && !isProfileFetching) {
@@ -31,7 +28,7 @@ export function EventsScreen() {
                 profile={profile}
             />
 
-            {!isEventFetching && events && events.length > 0 && (
+            {!isEventLoading && events && events.length > 0 && (
                 <>
                     <EventCard event={events[0]} />
                     <FlatList
@@ -48,7 +45,7 @@ export function EventsScreen() {
                     />
                 </>)
             }
-            {isEventFetching && <View>
+            {isEventLoading && <View>
                 <Text>Chargement...</Text>
             </View>}
             {(!events || events.length === 0 || isError) && <Text>Aucun évènement</Text>}

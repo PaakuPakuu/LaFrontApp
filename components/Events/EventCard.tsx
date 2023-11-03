@@ -3,6 +3,7 @@ import { CategoryBadge } from "../badge/CategoryBadge";
 import { UserEvent } from "../../models/customModels";
 import { useAppNavigation } from "../../hooks";
 import { EventStackParamList } from "../../App";
+import { Feather } from "@expo/vector-icons";
 
 interface Props {
     event: UserEvent;
@@ -24,6 +25,10 @@ export function EventCard({ event }: Props) {
                 <View style={styles.titlesContainer}>
                     <Text style={styles.subTitle}>Votre prochain évènement</Text>
                     <Text style={styles.title}>{event?.title}</Text>
+                    <View style={styles.addressWrapper}>
+                        <Feather name="map-pin" size={16} color="black" />
+                        <Text style={styles.address}>{event.address}</Text>
+                    </View>
                 </View>
                 <CategoryBadge category={event?.category} />
             </View>
@@ -56,6 +61,15 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
+    },
+    addressWrapper: {
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        gap: 8,
+    },
+    address: {
+        fontSize: 16,
+        marginTop: 8,
     },
     bottomContainer: {
         justifyContent: 'space-between',
