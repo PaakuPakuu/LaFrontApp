@@ -1,6 +1,6 @@
 import {Text, TextInput, TouchableOpacity, StyleSheet, View, Button, Alert} from 'react-native';
 import {useCreateEventMutation} from "../store/supabaseApi";
-import {Tables} from "../database.types";
+import {Tables, TablesInsert} from "../database.types";
 import React, {useState} from "react";
 import {supabase} from "../supabaseConfig";
 import {useNavigation} from "@react-navigation/native";
@@ -9,7 +9,7 @@ import {MainTabParamList} from "../App";
 import {RadioButton} from "react-native-paper";
 
 export function EventCreationScreen() {
-    const [eventData, setEventData] = useState<Tables<"Event">>({
+    const [eventData, setEventData] = useState<TablesInsert<"Event">>({
         created_at: new Date().toString(),
         address: "",
         description: "",
@@ -23,15 +23,13 @@ export function EventCreationScreen() {
     const [createEvent, {isLoading}] = useCreateEventMutation()
     const navigation = useNavigation<NativeStackNavigationProp<MainTabParamList>>();
 
-    async function handleCreateEvent(eventData: Tables<"Event">) {
+    async function handleCreateEvent(eventData: TablesInsert<"Event">) {
         const {data: {user}} = await supabase.auth.getUser()
 
         if (user) {
             setEventData(prevState => ({...prevState, user: user.id}))
 
             await createEvent(eventData);
-
-            console.log('lol')
 
             if (!isLoading) {
                 navigation.navigate('MainStack', {screen: 'EventsScreen'})

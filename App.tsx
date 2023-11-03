@@ -62,9 +62,8 @@ export default function App() {
         return (
             <>
                 <RootStack.Navigator initialRouteName="EventsScreen">
-                    <RootStack.Screen name="EventsScreen" component={EventsScreen}/>
-                    <RootStack.Screen name="EventScreen" component={EventScreen}/>
-                    <RootStack.Screen name="EventCreationScreen" component={EventCreationScreen}/>
+                    <RootStack.Screen options={{title: 'Les évènements'}} name="EventsScreen" component={EventsScreen}/>
+                    <RootStack.Screen options={{title: 'L\'évènement en détail'}} name="EventScreen" component={EventScreen}/>
                 </RootStack.Navigator>
             </>
         )
@@ -83,13 +82,17 @@ export default function App() {
                     <>
                         <MainTab.Screen name="EventsStack" component={EventStack}
                                         options={{
+                                            headerShown: false,
                                             tabBarLabel: "Événements",
                                             tabBarIcon: () => (
                                                 <MaterialIcons name="event-note" size={24} color="black"/>
                                             ),
                                         }}
                         />
+                        <MainTab.Screen name="EventCreationScreen" component={EventCreationScreen}/>
+
                         <MainTab.Screen name="ProfilScreen" component={ProfileScreen} options={{
+                            title: 'Mes infos',
                             tabBarLabel: "Profil",
                             tabBarIcon: () => (
                                 <MaterialCommunityIcons name="account" size={24} color="black"/>
@@ -108,7 +111,7 @@ export default function App() {
                 <RootStack.Navigator>
                     {session && session.user ?
                         <>
-                            <RootStack.Screen name="MainStack" component={MainStack}/>
+                            <RootStack.Screen options={{headerShown: false}} name="MainStack" component={MainStack}/>
                         </>
                         : (<>
                             <RootStack.Screen name="LoginScreen" component={LoginScreen}/>

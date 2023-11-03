@@ -1,12 +1,15 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { supabase } from "../supabaseConfig";
-import { Tables } from '../database.types';
+import {Tables, TablesInsert} from '../database.types';
 
 export const supabaseApi = createApi({
     reducerPath: 'supabaseApi',
     baseQuery: fakeBaseQuery(),
-    tagTypes: ['Event'],
+    tagTypes: [
+        'Event',
+        'Comment'
+    ],
     endpoints: (builder) => ({
         fetchAllEvents: builder.query<Tables<"Event">[], void>({
             queryFn: async () => {
@@ -36,11 +39,10 @@ export const supabaseApi = createApi({
                     .from('Comment')
                     .select('text, created_at, author')
                     .eq('event', eventId)
-                    .eq('event', eventId)
-
 
                 return { data: Events as Tables<"Comment">[] };
             },
+            providesTags: ['Comment'],
         }),
         getCurrentProfile: builder.query<Tables<"Profile">, void>({
             async queryFn() {
@@ -68,28 +70,30 @@ export const supabaseApi = createApi({
                 return { data: Events as Tables<"Event">[] };
             }
         }),
-        createEvent: builder.mutation<Tables<"Event">, Tables<"Event">>({
+        createEvent: builder.mutation<TablesInsert<"Event">, TablesInsert<"Event">>({
             async queryFn(eventToInsert) {
-                const { data } = await supabase
+                const { data, error } = await supabase
                     .from('Event')
                     .insert(eventToInsert)
                     .select()
                     .single()
 
+                console.log(eventToInsert,error)
 
                 return { data: data as Tables<"Event"> }
             }
         }),
-        addComment: builder.mutation<Tables<"Comment">, Tables<"Comment">>({
+        addComment: builder.mutation<Tables<"Comment">, TablesInsert<"Comment">>({
             async queryFn(commentToInsert) {
-                const { data } = await supabase
+                const { data, error } = await supabase
                     .from('Comment')
-                    .insert(commentToInsert)
+                    .insert([commentToInsert])
                     .select()
                     .single();
 
                 return { data: data as Tables<"Comment"> }
-            }
+            },
+            invalidatesTags: ['Comment']
         }),
         createProfile: builder.mutation<Tables<"Profile">, Tables<"Profile">>({
             async queryFn(profileToCreate) {
