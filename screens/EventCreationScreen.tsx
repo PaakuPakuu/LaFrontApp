@@ -27,13 +27,14 @@ export function EventCreationScreen() {
         const {data: {user}} = await supabase.auth.getUser()
 
         if (user) {
-            setEventData(prevState => ({...prevState, user: user.id}))
 
-            await createEvent(eventData);
+            eventData.user = user.id.toString();
 
-            if (!isLoading) {
-                navigation.navigate('MainStack', {screen: 'EventsScreen'})
-            }
+            await createEvent(eventData).then(
+                () => {
+                    navigation.navigate('EventsScreen')
+                }
+            )
         } else {
             Alert.alert('Euh wtf ?')
         }
@@ -69,12 +70,11 @@ export function EventCreationScreen() {
                 />
             </View>
 
-            <Button title="Je créé mon profile" disabled={isLoading} onPress={async () => handleCreateEvent(eventData)}/>
+            <Button title="Je créé mon event" disabled={isLoading} onPress={async () => handleCreateEvent(eventData)}/>
 
         </>
     )
 }
-
 
 
 const styles = StyleSheet.create({

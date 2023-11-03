@@ -19,6 +19,7 @@ export const supabaseApi = createApi({
 
                 return { data: Events as Tables<"Event">[] };
             },
+            providesTags: ["Event"]
         }),
         getOneEvent: builder.query<Tables<"Event">, number>({
             async queryFn(id) {
@@ -81,7 +82,8 @@ export const supabaseApi = createApi({
                 console.log(eventToInsert,error)
 
                 return { data: data as Tables<"Event"> }
-            }
+            },
+            invalidatesTags: ["Event"]
         }),
         addComment: builder.mutation<Tables<"Comment">, TablesInsert<"Comment">>({
             async queryFn(commentToInsert) {
@@ -95,9 +97,9 @@ export const supabaseApi = createApi({
             },
             invalidatesTags: ['Comment']
         }),
-        createProfile: builder.mutation<Tables<"Profile">, Tables<"Profile">>({
+        createProfile: builder.mutation<Tables<"Profile">, TablesInsert<"Profile">>({
             async queryFn(profileToCreate) {
-                const { data } = await supabase
+                const { data,error } = await supabase
                     .from('Profile')
                     .insert(profileToCreate)
                     .select()

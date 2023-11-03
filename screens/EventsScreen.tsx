@@ -2,7 +2,6 @@ import { FlatList, View, Text, StyleSheet } from "react-native";
 import { EventCard } from "../components/Events/EventCard";
 
 import { useFetchAllEventsQuery } from "../store/supabaseApi";
-import { EventItem } from "../components/Events/EventItem";
 
 export function EventsScreen() {
     const { data, isFetching, isLoading, isError } = useFetchAllEventsQuery();

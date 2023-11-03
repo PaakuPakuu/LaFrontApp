@@ -92,7 +92,7 @@ export default function App() {
                         <MainTab.Screen name="EventCreationScreen" component={EventCreationScreen}/>
 
                         <MainTab.Screen name="ProfilScreen" component={ProfileScreen} options={{
-                            title: 'Mes infos',
+                            title: 'Profil',
                             tabBarLabel: "Profil",
                             tabBarIcon: () => (
                                 <MaterialCommunityIcons name="account" size={24} color="black"/>
