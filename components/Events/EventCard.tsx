@@ -1,14 +1,15 @@
-import {View, StyleSheet, Text, TouchableOpacity} from "react-native";
-import {CategoryBadge} from "../badge/CategoryBadge";
-import {UserEvent} from "../../models/customModels";
-import {useAppNavigation} from "../../hooks";
-import {EventStackParamList} from "../../App";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { CategoryBadge } from "../badge/CategoryBadge";
+import { UserEvent } from "../../models/customModels";
+import { useAppNavigation } from "../../hooks";
+import { EventStackParamList } from "../../App";
+import { Feather } from "@expo/vector-icons";
 
 interface Props {
     event: UserEvent;
 }
 
-export function EventCard({event}: Props) {
+export function EventCard({ event }: Props) {
     const navigation = useAppNavigation<EventStackParamList>();
 
     const eventDate = new Date(event.created_at).toLocaleDateString(undefined, {
@@ -20,7 +21,7 @@ export function EventCard({event}: Props) {
 
     const eventHour = new Date(event.created_at).toLocaleTimeString(undefined, {
         hour: "2-digit",
-        minute:"2-digit"
+        minute: "2-digit"
     });
 
     const handlePress = () => {
@@ -36,13 +37,17 @@ export function EventCard({event}: Props) {
                 <View style={styles.titlesContainer}>
                     <Text style={styles.subTitle}>Votre prochain évènement</Text>
                     <Text style={styles.title}>{event?.title}</Text>
+                    <View style={styles.addressWrapper}>
+                        <Feather name="map-pin" size={16} color="black" />
+                        <Text style={styles.address}>{event.address}</Text>
+                    </View>
                 </View>
-                <CategoryBadge category={event?.category}/>
+                <CategoryBadge category={event?.category} />
             </View>
             <View style={styles.bottomContainer}>
                 <Text>{event.comments.length} commentaire(s)</Text>
                 <View>
-                    <Text style={{textAlign: "right"}}>{eventHour}</Text>
+                    <Text style={{ textAlign: "right" }}>{eventHour}</Text>
 
                     <Text>{eventDate}</Text>
                 </View>
@@ -73,9 +78,18 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
     },
+    addressWrapper: {
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        gap: 8,
+    },
+    address: {
+        fontSize: 16,
+        marginTop: 8,
+    },
     bottomContainer: {
         justifyContent: 'space-between',
         flexDirection: 'row',
-        alignItems:'flex-end'
+        alignItems: 'flex-end'
     }
 });
