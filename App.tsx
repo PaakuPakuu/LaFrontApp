@@ -10,11 +10,12 @@ import Login from "./screens/Login";
 import { EventScreen } from "./screens/EventScreen";
 import { EventCreationScreen } from './screens/EventCreationScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import { UserEvent } from "./models/customModels";
 
 
-interface StackType extends ParamListBase {
+export type StackType = {
     EventsScreen: undefined,
-    EventScreen: { eventId: string },
+    EventScreen: { event: UserEvent },
     EventCreationScreen: undefined
     ProfileScreen: undefined
 }

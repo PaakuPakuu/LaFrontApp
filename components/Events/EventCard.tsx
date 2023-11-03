@@ -1,15 +1,25 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { CategoryBadge } from "../badge/CategoryBadge";
-import { Tables } from "../../database.types";
+import { UserEvent } from "../../models/customModels";
+import { useAppNavigation } from "../../hooks";
+import { StackType } from "../../App";
 
 interface Props {
-    event: Tables<"Event">;
+    event: UserEvent;
 }
 
 export function EventCard({ event }: Props) {
+    const navigation = useAppNavigation<StackType>();
+
+    const handlePress = () => {
+        navigation.navigate('EventScreen', { event });
+    }
 
     return (
-        <View style={styles.container}>
+        <TouchableOpacity
+            style={styles.container}
+            onPress={handlePress}
+        >
             <View style={styles.headerContainer}>
                 <View style={styles.titlesContainer}>
                     <Text style={styles.subTitle}>Votre prochain évènement</Text>
@@ -17,18 +27,21 @@ export function EventCard({ event }: Props) {
                 </View>
                 <CategoryBadge category={event.category} />
             </View>
-
-        </View>
+            <View style={styles.bottomContainer}>
+                <Text>{event.comments.length} commentaire(s)</Text>
+                <Text>{new Date(event.date).toDateString()}</Text>
+            </View>
+        </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
+        justifyContent: 'space-between',
         padding: 16,
         backgroundColor: '#fff',
         borderRadius: 16,
-        marginBottom: 16,
-        minHeight: 200,
+        minHeight: 150,
     },
     headerContainer: {
         flexDirection: 'row',
@@ -44,4 +57,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
     },
+    bottomContainer: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    }
 });
