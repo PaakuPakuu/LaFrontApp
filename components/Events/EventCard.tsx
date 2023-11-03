@@ -12,6 +12,18 @@ interface Props {
 export function EventCard({ event }: Props) {
     const navigation = useAppNavigation<EventStackParamList>();
 
+    const eventDate = new Date(event.created_at).toLocaleDateString(undefined, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
+
+    const eventHour = new Date(event.created_at).toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
     const handlePress = () => {
         navigation.navigate('EventScreen', event);
     }
@@ -34,7 +46,11 @@ export function EventCard({ event }: Props) {
             </View>
             <View style={styles.bottomContainer}>
                 <Text>{event.comments.length} commentaire(s)</Text>
-                <Text>{new Date(event.date).toDateString()}</Text>
+                <View>
+                    <Text style={{ textAlign: "right" }}>{eventHour}</Text>
+
+                    <Text>{eventDate}</Text>
+                </View>
             </View>
         </TouchableOpacity>
     )
@@ -74,5 +90,6 @@ const styles = StyleSheet.create({
     bottomContainer: {
         justifyContent: 'space-between',
         flexDirection: 'row',
+        alignItems: 'flex-end'
     }
 });
