@@ -7,11 +7,23 @@ type Props = {
 
 export function ProfileEvent({ event }: Props) {
 
+    const eventDate = new Date(event.created_at).toLocaleDateString(undefined, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
+
+    const eventHour = new Date(event.created_at).toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute:"2-digit"
+    });
+
     return (<View style={styles.container}>
         <Text>{event.title}</Text>
         <Text>{event.category}</Text>
         <Text>{event.address}</Text>
-        <Text>{new Date(event.date).toDateString()}</Text>
+        <Text>{eventDate} - {eventHour}</Text>
     </View>)
 }
 
