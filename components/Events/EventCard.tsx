@@ -1,39 +1,47 @@
-import {View, StyleSheet, Text, TouchableOpacity} from "react-native";
-import {CategoryBadge} from "../badge/CategoryBadge";
-import {Tables} from "../../database.types";
-import {useNavigation} from "@react-navigation/native";
-import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {MainTabParamList} from "../../App";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { CategoryBadge } from "../badge/CategoryBadge";
+import { UserEvent } from "../../models/customModels";
+import { useAppNavigation } from "../../hooks";
+import { EventStackParamList } from "../../App";
 
 interface Props {
-    event: Tables<"Event">;
+    event: UserEvent;
 }
 
+export function EventCard({ event }: Props) {
+    const navigation = useAppNavigation<EventStackParamList>();
 
-export function EventCard({event}: Props) {
-    const navigation = useNavigation<NativeStackNavigationProp<MainTabParamList>>();
+    const handlePress = () => {
+        navigation.navigate('EventScreen', event);
+    }
 
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('EventScreen', event.id)} style={styles.container}>
+        <TouchableOpacity
+            style={styles.container}
+            onPress={handlePress}
+        >
             <View style={styles.headerContainer}>
                 <View style={styles.titlesContainer}>
                     <Text style={styles.subTitle}>Votre prochain évènement</Text>
                     <Text style={styles.title}>{event?.title}</Text>
                 </View>
-                <CategoryBadge category={event?.category}/>
+                <CategoryBadge category={event?.category} />
             </View>
-
+            <View style={styles.bottomContainer}>
+                <Text>{event.comments.length} commentaire(s)</Text>
+                <Text>{new Date(event.date).toDateString()}</Text>
+            </View>
         </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
+        justifyContent: 'space-between',
         padding: 16,
         backgroundColor: '#fff',
         borderRadius: 16,
-        marginBottom: 16,
-        minHeight: 200,
+        minHeight: 150,
     },
     headerContainer: {
         flexDirection: 'row',
@@ -49,4 +57,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
     },
+    bottomContainer: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    }
 });

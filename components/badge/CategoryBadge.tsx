@@ -1,4 +1,4 @@
-import { Enums } from "../../database.types";
+import { Enums } from "../../models/customModels";
 import { Badge } from "./Badge";
 
 interface Props {
