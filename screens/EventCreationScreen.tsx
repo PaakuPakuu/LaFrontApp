@@ -2,7 +2,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import format from 'date-fns/format';
 import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { EventStackParamList } from "../App";
 import { useAppNavigation } from '../hooks';
 import { TablesInsert } from '../models/customModels';
@@ -43,7 +43,7 @@ export function EventCreationScreen() {
     }
 
     return (
-        <>
+        <SafeAreaView>
 
             <View style={styles.verticallySpaced}>
                 <TextInput
@@ -112,7 +112,7 @@ export function EventCreationScreen() {
                     color="black"
                     onPress={async () => handleCreateEvent(eventData)} />
             </View>
-        </>
+        </SafeAreaView>
     )
 }
 
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     },
 
     picker: {
-        position:'relative',
+        position: 'relative',
         bottom: 50,
     }
 })

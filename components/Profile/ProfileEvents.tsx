@@ -1,9 +1,9 @@
-import {FlatList, StyleSheet, Text, View} from "react-native";
-import {useGetUserEventsQuery} from "../../store/supabaseApi";
-import {ProfileEvent} from "./ProfileEvent";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { useGetUserEventsQuery } from "../../store/supabaseApi";
+import { EventItem } from "../Events/EventItem";
 
 export function ProfileEvents() {
-    const {data, isFetching, isLoading} = useGetUserEventsQuery();
+    const { data: events, isLoading } = useGetUserEventsQuery();
 
     return (<View>
 
@@ -11,19 +11,18 @@ export function ProfileEvents() {
             Vos évènements
         </Text>
 
-        {data && !isLoading &&
-            <FlatList data={data} renderItem={({item}) =>
-                <ProfileEvent event={item} />
-            }/>
-
-        }
+        {!isLoading && events && (
+            events.map((event, index) => (
+                <EventItem key={`event-${index}`} event={event} />
+            ))
+        )}
 
     </View>)
 }
 
 const styles = StyleSheet.create({
     mainTitle: {
-        fontSize: 18,
+        fontSize: 24,
         paddingTop: 20,
         paddingBottom: 12
     }

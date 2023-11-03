@@ -1,5 +1,5 @@
 import { supabaseApi, useGetCurrentProfileQuery } from "../store/supabaseApi";
-import { View, Text, FlatList, Alert, Button, Image, StyleSheet } from "react-native";
+import { View, Text, FlatList, Alert, Button, Image, StyleSheet, ScrollView } from "react-native";
 import { Instrument } from "../components/Profile/Instrument";
 import { ProfileEvents } from "../components/Profile/ProfileEvents";
 import { supabase } from "../supabaseConfig";
@@ -21,42 +21,44 @@ export default function () {
         dispatch(supabaseApi.util.invalidateTags(['Profile']));
     }
 
-    return (<>
-        {!isFetching && profile && <View style={styles.container}>
-            <View style={styles.mainContainer}>
-                <EditProfileModal
-                    visible={modalVisible}
-                    onClose={() => setModalVisible(false)}
-                    profile={profile}
-                />
+    return (
+        <>
+            {!isFetching && profile &&
+                <ScrollView style={styles.container}>
+                    <View style={styles.mainContainer}>
+                        <EditProfileModal
+                            visible={modalVisible}
+                            onClose={() => setModalVisible(false)}
+                            profile={profile}
+                        />
 
-                <Image source={{ uri: "https://placehold.co/80x80/png" }} style={styles.picture} />
-                <View style={styles.topContainer}>
-                    <View style={styles.nameContainer}>
-                        <Text style={styles.nickname}>
-                            {profile.nickname}
-                        </Text>
-                        <Text>
-                            {profile.firstname}{profile.lastname}
-                        </Text>
+                        <Image source={{ uri: "https://placehold.co/80x80/png" }} style={styles.picture} />
+                        <View style={styles.topContainer}>
+                            <View style={styles.nameContainer}>
+                                <Text style={styles.nickname}>
+                                    {profile.nickname}
+                                </Text>
+                                <Text>
+                                    {profile.firstname} {profile.lastname}
+                                </Text>
+                            </View>
+                            <Button title="Éditer" onPress={() => setModalVisible(true)} />
+                        </View>
+
                     </View>
-                    <Button title="Éditer" onPress={() => setModalVisible(true)} />
-                </View>
 
-            </View>
+                    <View>
+                        {profile.instruments?.map((instrument, index) => <Instrument key={`instrument-${index}`} instrument={instrument} />)}
+                    </View>
 
-            <FlatList
-                data={profile.instruments}
-                renderItem={({ item }) =>
-                    <Instrument instrument={item} />
-                }
-            />
 
-            <ProfileEvents />
+                    <ProfileEvents />
 
-            <Button title="Déconnexion" disabled={isFetching} onPress={async () => logOut()} />
-        </View>}
-    </>)
+                    <Button title="Déconnexion" disabled={isFetching} onPress={async () => logOut()} color="red" />
+                </ScrollView>
+            }
+        </>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -70,7 +72,8 @@ const styles = StyleSheet.create({
         padding: 15
     },
     mainContainer: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginBottom: 16
     },
     topContainer: {
         flex: 1,
@@ -85,7 +88,4 @@ const styles = StyleSheet.create({
     nickname: {
         fontSize: 18
     },
-    modal: {
-
-    }
 });
