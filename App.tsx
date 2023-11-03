@@ -12,8 +12,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { EventCreationScreen } from "./screens/EventCreationScreen";
 import { SignInScreen } from "./screens/SignInScreen";
-import { useGetCurrentProfileQuery } from "./store/supabaseApi";
-import { CreateProfileScreen } from "./screens/CreateProfileScreen"
 import LoginScreen from "./screens/LoginScreen";
 import { EventScreen } from "./screens/EventScreen";
 import { UserEvent } from "./models/customModels";
@@ -69,12 +67,8 @@ export default function App() {
 
 
     function MainStack() {
-        // const { data: profile, isFetching, isLoading } = useGetCurrentProfileQuery();
-
         return (
             <MainTab.Navigator initialRouteName='EventsStack'>
-
-                <MainTab.Screen name="CreationProfileScreen" component={CreateProfileScreen} />
                 <MainTab.Screen name="EventsStack" component={EventStack}
                     options={{
                         headerShown: false,

@@ -14,7 +14,6 @@ type Props = {
 export function EventDetailsComments({ event }: Props) {
     const { data, isLoading } = useFetchAllCommentariesPerEventQuery(event.id);
 
-    console.log(event);
 
     const [commentData, setCommentData] = useState<TablesInsert<"Comment">>({
         author: "",

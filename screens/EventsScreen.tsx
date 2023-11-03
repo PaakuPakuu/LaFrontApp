@@ -1,19 +1,36 @@
 import { FlatList, View, Text, StyleSheet } from "react-native";
 
-import { useFetchAllEventsQuery } from "../store/supabaseApi";
+import { useFetchAllEventsQuery, useGetCurrentProfileQuery } from "../store/supabaseApi";
 import { EventItem } from "../components/Events/EventItem";
 import { EventCard } from "../components/Events/EventCard";
+import { EditProfileModal } from "../components/editProfileModal/EditProfileModal";
+import { useEffect, useState } from "react";
 
 export function EventsScreen() {
-    const { data, isFetching, isLoading, isError } = useFetchAllEventsQuery();
+    const { data: events, isLoading, isError } = useFetchAllEventsQuery();
+    const { data: profile } = useGetCurrentProfileQuery();
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    useEffect(() => {
+        if (!profile) {
+            setModalVisible(true);
+        }
+    }, [profile]);
 
     return (
         <View style={styles.container}>
-            {!isLoading && data && (
+            <EditProfileModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                profile={profile}
+            />
+
+            {!isLoading && events && (
                 <>
-                    <EventCard event={data[0]} />
+                    <EventCard event={events[0]} />
                     <FlatList
-                        data={data.slice(1)}
+                        data={events.slice(1)}
                         numColumns={1}
                         renderItem={({ item }) =>
                             <EventItem event={item} />
@@ -26,7 +43,7 @@ export function EventsScreen() {
             {isLoading && <View>
                 <Text>Chargement...</Text>
             </View>}
-            {(!data || isError) && <Text>Aucun évènement</Text>}
+            {(!events || isError) && <Text>Aucun évènement</Text>}
         </View>
     )
 }

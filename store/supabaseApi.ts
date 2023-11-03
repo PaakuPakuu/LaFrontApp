@@ -8,7 +8,8 @@ export const supabaseApi = createApi({
     baseQuery: fakeBaseQuery(),
     tagTypes: [
         'Event',
-        'Comment'
+        'Comment',
+        'Profile'
     ],
     endpoints: (builder) => ({
         fetchAllEvents: builder.query<UserEvent[], void>({
@@ -40,8 +41,6 @@ export const supabaseApi = createApi({
                     .select()
                     .eq('event', eventId);
 
-                console.log("id : " + eventId);
-
                 return { data: Comments as EventComment[] };
             },
             providesTags: ['Comment'],
@@ -56,9 +55,10 @@ export const supabaseApi = createApi({
                     .eq('user', user!.id)
                     .single();
 
-                return { data: Profile as Profile }
+                return { data: Profile as Profile };
 
-            }
+            },
+            providesTags: ['Profile']
         }),
         getUserEvents: builder.query<UserEvent[], void>({
             async queryFn() {
@@ -82,7 +82,7 @@ export const supabaseApi = createApi({
 
                 console.log(eventToInsert, error)
 
-                return { data: data as TablesInsert<"Event"> }
+                return { data: data as TablesInsert<"Event"> };
             }
         }),
         addComment: builder.mutation<EventComment, TablesInsert<"Comment">>({
@@ -93,20 +93,21 @@ export const supabaseApi = createApi({
                     .select()
                     .single();
 
-                return { data: data as EventComment }
+                return { data: data as EventComment };
             },
             invalidatesTags: ['Comment']
         }),
-        createProfile: builder.mutation<Profile, TablesInsert<"Profile">>({
+        upsertProfile: builder.mutation<Profile, TablesInsert<"Profile">>({
             async queryFn(profileToCreate) {
                 const { data, error } = await supabase
                     .from('Profile')
-                    .insert(profileToCreate)
+                    .upsert(profileToCreate)
                     .select()
                     .single();
 
-                return { data: data as Profile }
-            }
+                return { data: data as Profile };
+            },
+            invalidatesTags: ['Profile']
         })
     })
 })
@@ -119,5 +120,5 @@ export const {
     useFetchAllCommentariesPerEventQuery,
     useCreateEventMutation,
     useAddCommentMutation,
-    useCreateProfileMutation
+    useUpsertProfileMutation
 } = supabaseApi
