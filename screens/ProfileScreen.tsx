@@ -1,24 +1,28 @@
-import { useGetCurrentProfileQuery } from "../store/supabaseApi";
-import { View, Text, FlatList, Alert, Button, Image, StyleSheet, Modal, SafeAreaView } from "react-native";
+import { supabaseApi, useGetCurrentProfileQuery } from "../store/supabaseApi";
+import { View, Text, FlatList, Alert, Button, Image, StyleSheet } from "react-native";
 import { Instrument } from "../components/Profile/Instrument";
 import { ProfileEvents } from "../components/Profile/ProfileEvents";
 import { supabase } from "../supabaseConfig";
 import { useState } from "react";
 import { EditProfileModal } from "../components/editProfileModal/EditProfileModal";
+import { useAppDispatch } from "../hooks";
 
 export default function () {
-    const { data: profile, isLoading } = useGetCurrentProfileQuery();
+    const { data: profile, isFetching } = useGetCurrentProfileQuery();
 
     const [modalVisible, setModalVisible] = useState(false);
+    const dispatch = useAppDispatch()
 
     async function logOut() {
         const { error } = await supabase.auth.signOut()
 
         if (error) Alert.alert('Apparemment tu peux pas te déco, mais c\'est pas grave non ?')
+
+        dispatch(supabaseApi.util.invalidateTags(['Profile']));
     }
 
     return (<>
-        {!isLoading && profile && <View style={styles.container}>
+        {!isFetching && profile && <View style={styles.container}>
             <View style={styles.mainContainer}>
                 <EditProfileModal
                     visible={modalVisible}
@@ -50,7 +54,7 @@ export default function () {
 
             <ProfileEvents />
 
-            <Button title="Déconnexion" disabled={isLoading} onPress={async () => logOut()} />
+            <Button title="Déconnexion" disabled={isFetching} onPress={async () => logOut()} />
         </View>}
     </>)
 }

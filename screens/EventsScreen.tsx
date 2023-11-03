@@ -7,16 +7,16 @@ import { EditProfileModal } from "../components/editProfileModal/EditProfileModa
 import { useEffect, useState } from "react";
 
 export function EventsScreen() {
-    const { data: events, isLoading, isError } = useFetchAllEventsQuery();
-    const { data: profile } = useGetCurrentProfileQuery();
+    const { data: events, isError, isFetching: isEventFetching } = useFetchAllEventsQuery();
+    const { data: profile, isFetching: isProfileFetching } = useGetCurrentProfileQuery();
 
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
-        if (!profile) {
+        if (!profile && !isProfileFetching) {
             setModalVisible(true);
         }
-    }, [profile]);
+    }, [profile, isProfileFetching]);
 
     return (
         <View style={styles.container}>
@@ -26,7 +26,7 @@ export function EventsScreen() {
                 profile={profile}
             />
 
-            {!isLoading && events && (
+            {!isEventFetching && events && (
                 <>
                     <EventCard event={events[0]} />
                     <FlatList
@@ -40,7 +40,7 @@ export function EventsScreen() {
                     />
                 </>)
             }
-            {isLoading && <View>
+            {isEventFetching && <View>
                 <Text>Chargement...</Text>
             </View>}
             {(!events || isError) && <Text>Aucun évènement</Text>}

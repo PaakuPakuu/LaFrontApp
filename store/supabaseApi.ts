@@ -38,7 +38,7 @@ export const supabaseApi = createApi({
             async queryFn(eventId) {
                 const { data: Comments } = await supabase
                     .from('Comment')
-                    .select()
+                    .select('*, profile:Profile(*)')
                     .eq('event', eventId);
 
                 return { data: Comments as EventComment[] };
@@ -95,7 +95,7 @@ export const supabaseApi = createApi({
 
                 return { data: data as EventComment };
             },
-            invalidatesTags: ['Comment']
+            invalidatesTags: ['Comment', 'Event']
         }),
         upsertProfile: builder.mutation<Profile, TablesInsert<"Profile">>({
             async queryFn(profileToCreate) {
