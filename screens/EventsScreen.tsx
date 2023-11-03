@@ -31,7 +31,7 @@ export function EventsScreen() {
                 profile={profile}
             />
 
-            {!isEventFetching && events && (
+            {!isEventFetching && events && events.length > 0 && (
                 <>
                     <EventCard event={events[0]} />
                     <FlatList
@@ -51,7 +51,7 @@ export function EventsScreen() {
             {isEventFetching && <View>
                 <Text>Chargement...</Text>
             </View>}
-            {(!events || isError) && <Text>Aucun évènement</Text>}
+            {(!events || events.length === 0 || isError) && <Text>Aucun évènement</Text>}
         </View>
     )
 }
