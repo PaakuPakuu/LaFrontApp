@@ -1,10 +1,10 @@
-import {supabase} from "../supabaseConfig";
-import {Alert, Button, StyleSheet, TextInput, View} from "react-native";
-import React, {useState} from "react";
-import {useNavigation} from "@react-navigation/native";
-import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {MainTabParamList} from "../App";
-import {Tables} from "../database.types";
+import { supabase } from "../supabaseConfig";
+import { Alert, Button, StyleSheet, TextInput, View } from "react-native";
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { MainTabParamList, RootStackParamList } from "../App";
+import { useAppNavigation } from "../hooks";
 
 export function SignInScreen() {
     const [loading, setLoading] = useState(false)
@@ -12,13 +12,13 @@ export function SignInScreen() {
     const [password, setPassword] = useState('')
 
 
-    const navigation = useNavigation<NativeStackNavigationProp<MainTabParamList>>();
+    const navigation = useAppNavigation<RootStackParamList>();
 
     async function signUpWithEmail() {
 
         setLoading(true)
         const {
-            data: {session},
+            data: { session },
             error,
         } = await supabase.auth.signUp({
             email: email,
@@ -60,7 +60,7 @@ export function SignInScreen() {
                 />
             </View>
 
-            <Button title="S'inscrire" disabled={loading} onPress={() => signUpWithEmail()}/>
+            <Button title="S'inscrire" disabled={loading} onPress={() => signUpWithEmail()} />
         </>
     )
 }

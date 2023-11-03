@@ -1,35 +1,32 @@
-import {Alert, Button, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View } from "react-native";
 import {
     useAddCommentMutation,
-    useCreateEventMutation,
     useFetchAllCommentariesPerEventQuery
 } from "../../store/supabaseApi";
-import React, {useState} from "react";
-import {Tables, TablesInsert} from "../../database.types";
-import {supabase} from "../../supabaseConfig";
-import {useNavigation} from "@react-navigation/native";
-import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {MainTabParamList} from "../../App";
+import React, { useState } from "react";
+import { supabase } from "../../supabaseConfig";
+import { TablesInsert, UserEvent } from "../../models/customModels";
 
 type Props = {
-    eventId: number
+    event: UserEvent;
 }
 
-export function EventDetailsComments({eventId}: Props) {
-    const {data, isLoading} = useFetchAllCommentariesPerEventQuery(eventId);
+export function EventDetailsComments({ event }: Props) {
+    const { data, isLoading } = useFetchAllCommentariesPerEventQuery(event.id);
+
+    console.log(event);
 
     const [commentData, setCommentData] = useState<TablesInsert<"Comment">>({
         author: "",
         created_at: new Date().toDateString(),
-        event: eventId,
+        event: event.id,
         text: ""
     });
 
     const [addComment] = useAddCommentMutation()
-    const navigation = useNavigation<NativeStackNavigationProp<MainTabParamList>>();
 
     async function handleCreateComment(commentData: TablesInsert<"Comment">) {
-        const {data: {user}} = await supabase.auth.getUser()
+        const { data: { user } } = await supabase.auth.getUser()
         if (user?.id) {
 
             commentData.author = user.id.toString();
@@ -49,13 +46,13 @@ export function EventDetailsComments({eventId}: Props) {
 
     return (
         <>
-            <Text style={{textAlign: 'center', fontSize: 24}}>
+            <Text style={{ textAlign: 'center', fontSize: 24 }}>
                 Commentaires :
             </Text>
 
             <FlatList
                 data={data}
-                renderItem={({item}) =>
+                renderItem={({ item }) =>
                     <View>
                         <Text>{new Date(item.created_at).toDateString()} | {item.author} :</Text>
                         <Text>{item.text}</Text>
@@ -66,13 +63,13 @@ export function EventDetailsComments({eventId}: Props) {
             <View style={styles.horizontallySpaced}>
                 <TextInput
                     style={styles.input}
-                    onChangeText={(value) => setCommentData(prevState => ({...prevState, text: value}))}
+                    onChangeText={(value) => setCommentData(prevState => ({ ...prevState, text: value }))}
                     value={commentData.text || ''}
                     placeholder="Votre commmentaire"
                     autoCapitalize={'sentences'}
                 />
 
-                <Button title="Commenter" disabled={isLoading} onPress={async () => handleCreateComment(commentData)}/>
+                <Button title="Commenter" disabled={isLoading} onPress={async () => handleCreateComment(commentData)} />
             </View>
 
         </>

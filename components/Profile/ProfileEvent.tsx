@@ -1,11 +1,11 @@
-import {StyleSheet, Text, View} from "react-native";
-import {Tables} from "../../database.types";
+import { StyleSheet, Text, View } from "react-native";
+import { UserEvent } from "../../models/customModels";
 
 type Props = {
-    event: Tables<"Event">
+    event: UserEvent
 }
 
-export function ProfileEvent({event}: Props) {
+export function ProfileEvent({ event }: Props) {
 
     return (<View style={styles.container}>
         <Text>{event.title}</Text>

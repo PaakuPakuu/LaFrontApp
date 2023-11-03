@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
-import {Alert, Button, StyleSheet, TextInput, View} from 'react-native'
-import {supabase} from "../supabaseConfig";
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {MainTabParamList} from "../App";
+import { Alert, Button, StyleSheet, TextInput, View } from 'react-native'
+import { supabase } from "../supabaseConfig";
+import { RootStackParamList } from "../App";
+import { useAppNavigation } from '../hooks';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const navigation = useNavigation<NativeStackNavigationProp<MainTabParamList>>();
+    const navigation = useAppNavigation<RootStackParamList>();
 
     async function signInWithEmail() {
         setLoading(true)
@@ -50,13 +49,13 @@ export default function LoginScreen() {
                 />
             </View>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Button title="Se connecter" disabled={loading} onPress={() => signInWithEmail()}/>
+                <Button title="Se connecter" disabled={loading} onPress={() => signInWithEmail()} />
             </View>
             <View style={styles.verticallySpaced}>
                 <TextInput>
                     Vous n'avez pas de compte ?
                 </TextInput>
-                <Button title="S'inscrire" disabled={loading} onPress={() => navigation.navigate('SignIn')}/>
+                <Button title="S'inscrire" disabled={loading} onPress={() => navigation.navigate('SignInScreen')} />
             </View>
         </View>
     )

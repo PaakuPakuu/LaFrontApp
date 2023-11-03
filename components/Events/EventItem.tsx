@@ -3,15 +3,15 @@ import { useGetCurrentProfileQuery } from "../../store/supabaseApi";
 import { Feather } from "@expo/vector-icons";
 import { UserEvent } from "../../models/customModels";
 import { useAppNavigation } from "../../hooks";
-import { StackType } from "../../App";
 import { CategoryBadge } from "../badge/CategoryBadge";
+import { EventStackParamList } from "../../App";
 
 interface Props {
     event: UserEvent;
 }
 
 export const EventItem = ({ event }: Props) => {
-    const navigation = useAppNavigation<StackType>();
+    const navigation = useAppNavigation<EventStackParamList>();
 
     const userProfile = useGetCurrentProfileQuery();
     const userParticipation = event.participations.find(p => p.user_id === userProfile.data?.id)?.participation;

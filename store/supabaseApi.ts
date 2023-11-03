@@ -1,7 +1,7 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { supabase } from "../supabaseConfig";
-import { UserEvent, EventComment, Profile } from '../models/customModels';
+import { UserEvent, EventComment, Profile, TablesInsert } from '../models/customModels';
 
 export const supabaseApi = createApi({
     reducerPath: 'supabaseApi',
@@ -40,6 +40,8 @@ export const supabaseApi = createApi({
                     .select()
                     .eq('event', eventId);
 
+                console.log("id : " + eventId);
+
                 return { data: Comments as EventComment[] };
             },
             providesTags: ['Comment'],
@@ -70,7 +72,7 @@ export const supabaseApi = createApi({
                 return { data: Events as UserEvent[] };
             }
         }),
-        createEvent: builder.mutation<UserEvent, UserEvent>({
+        createEvent: builder.mutation<TablesInsert<"Event">, TablesInsert<"Event">>({
             async queryFn(eventToInsert) {
                 const { data, error } = await supabase
                     .from('Event')
@@ -80,10 +82,10 @@ export const supabaseApi = createApi({
 
                 console.log(eventToInsert, error)
 
-                return { data: data as UserEvent }
+                return { data: data as TablesInsert<"Event"> }
             }
         }),
-        addComment: builder.mutation<EventComment, EventComment>({
+        addComment: builder.mutation<EventComment, TablesInsert<"Comment">>({
             async queryFn(commentToInsert) {
                 const { data, error } = await supabase
                     .from('Comment')
@@ -95,7 +97,7 @@ export const supabaseApi = createApi({
             },
             invalidatesTags: ['Comment']
         }),
-        createProfile: builder.mutation<Tables<"Profile">, TablesInsert<"Profile">>({
+        createProfile: builder.mutation<Profile, TablesInsert<"Profile">>({
             async queryFn(profileToCreate) {
                 const { data, error } = await supabase
                     .from('Profile')
@@ -103,7 +105,7 @@ export const supabaseApi = createApi({
                     .select()
                     .single();
 
-                return { data: data as Tables<"Profile"> }
+                return { data: data as Profile }
             }
         })
     })

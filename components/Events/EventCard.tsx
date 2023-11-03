@@ -2,17 +2,17 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { CategoryBadge } from "../badge/CategoryBadge";
 import { UserEvent } from "../../models/customModels";
 import { useAppNavigation } from "../../hooks";
-import { StackType } from "../../App";
+import { EventStackParamList } from "../../App";
 
 interface Props {
     event: UserEvent;
 }
 
 export function EventCard({ event }: Props) {
-    const navigation = useAppNavigation<StackType>();
+    const navigation = useAppNavigation<EventStackParamList>();
 
     const handlePress = () => {
-        navigation.navigate('EventScreen', { event });
+        navigation.navigate('EventScreen', event);
     }
 
     return (

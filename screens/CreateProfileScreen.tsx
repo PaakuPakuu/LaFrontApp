@@ -1,14 +1,13 @@
-import {Alert, Button, StyleSheet, TextInput, View} from "react-native";
-import React, {useState} from "react";
-import {Tables, TablesInsert} from "../database.types";
-import {supabase} from "../supabaseConfig";
-import {useCreateProfileMutation} from "../store/supabaseApi";
-import {useNavigation} from "@react-navigation/native";
-import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {MainTabParamList} from "../App";
+import { Alert, Button, StyleSheet, TextInput, View } from "react-native";
+import React, { useState } from "react";
+import { supabase } from "../supabaseConfig";
+import { useCreateProfileMutation } from "../store/supabaseApi";
+import { EventStackParamList, MainTabParamList } from "../App";
+import { TablesInsert } from "../models/customModels";
+import { useAppNavigation } from "../hooks";
 
 export function CreateProfileScreen() {
-    const navigation = useNavigation<NativeStackNavigationProp<MainTabParamList>>();
+    const navigation = useAppNavigation<MainTabParamList>();
 
     const [profileData, setProfileData] = useState<TablesInsert<"Profile">>({
         created_at: new Date().toString(),
@@ -19,18 +18,19 @@ export function CreateProfileScreen() {
         user: ""
     });
 
-    const [createProfile, {isLoading}] = useCreateProfileMutation()
+    const [createProfile, { isLoading }] = useCreateProfileMutation()
 
     async function handleCreateProfile(profileData: TablesInsert<"Profile">) {
-        const {data: {user}} = await supabase.auth.getUser()
+        const { data: { user } } = await supabase.auth.getUser()
 
         if (user) {
 
             profileData.user = user.id.toString();
 
-            await createProfile(profileData).then(()=> {
-                navigation.navigate('MainStack', {screen: 'ProfilScreen'})
-            })
+            await createProfile(profileData)
+                .then(() => {
+                    navigation.navigate("EventsStack");
+                })
 
         } else {
             Alert.alert('Euh wtf ?')
@@ -41,7 +41,7 @@ export function CreateProfileScreen() {
         <View style={styles.verticallySpaced}>
             <TextInput
                 style={styles.input}
-                onChangeText={(value) => setProfileData(prevState => ({...prevState, firstname: value}))}
+                onChangeText={(value) => setProfileData(prevState => ({ ...prevState, firstname: value }))}
                 value={profileData.firstname || ''}
                 placeholder="Prénom"
                 autoCapitalize={'words'}
@@ -50,7 +50,7 @@ export function CreateProfileScreen() {
         <View style={styles.verticallySpaced}>
             <TextInput
                 style={styles.input}
-                onChangeText={(value) => setProfileData(prevState => ({...prevState, lastname: value}))}
+                onChangeText={(value) => setProfileData(prevState => ({ ...prevState, lastname: value }))}
                 value={profileData.lastname || ''}
                 placeholder="Nom de famille"
                 autoCapitalize={'words'}
@@ -59,14 +59,14 @@ export function CreateProfileScreen() {
         <View style={styles.verticallySpaced}>
             <TextInput
                 style={styles.input}
-                onChangeText={(value) => setProfileData(prevState => ({...prevState, nickname: value}))}
+                onChangeText={(value) => setProfileData(prevState => ({ ...prevState, nickname: value }))}
                 value={profileData.nickname || ''}
                 placeholder="Surnom"
                 autoCapitalize={'words'}
             />
         </View>
 
-        <Button title="Je créé mon profile" disabled={isLoading} onPress={() => handleCreateProfile(profileData)}/>
+        <Button title="Je créé mon profile" disabled={isLoading} onPress={() => handleCreateProfile(profileData)} />
     </>)
 }
 

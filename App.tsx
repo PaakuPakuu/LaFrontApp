@@ -18,25 +18,23 @@ import LoginScreen from "./screens/LoginScreen";
 import { EventScreen } from "./screens/EventScreen";
 import { UserEvent } from "./models/customModels";
 
-export interface RootStackParamList extends ParamListBase {
-    EventsScreen: undefined,
-    EventScreen: undefined,
+export type RootStackParamList = {
+    MainStack: undefined,
     LoginScreen: undefined,
     ProfileScreen: undefined,
-    EventCreationScreen: undefined,
-    InfosProfilScreen: undefined,
+    SignInScreen: undefined,
 }
 
-export interface AuthStackParamList extends ParamListBase {
-
-}
-
-export interface MainTabParamList extends ParamListBase {
+export type MainTabParamList = {
+    EventsStack: undefined,
     ProfilScreen: undefined,
-    EventsScreen: undefined,
-    EventScreen: { event: UserEvent },
     EventCreationScreen: undefined,
-    InfosProfilScreen: undefined,
+    CreationProfileScreen: undefined,
+}
+
+export type EventStackParamList = {
+    EventsScreen: undefined,
+    EventScreen: UserEvent,
 }
 
 export default function App() {
@@ -50,57 +48,53 @@ export default function App() {
         supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session)
         })
+
     }, []);
 
 
     const RootStack = createNativeStackNavigator<RootStackParamList>();
-    const EventStackNavigator = createNativeStackNavigator<RootStackParamList>();
-    const MainTab = createBottomTabNavigator<RootStackParamList>();
+    const MainTab = createBottomTabNavigator<MainTabParamList>();
+    const EventStackNavigator = createNativeStackNavigator<EventStackParamList>();
 
     function EventStack() {
         return (
             <>
-                <RootStack.Navigator initialRouteName="EventsScreen">
-                    <RootStack.Screen options={{ title: 'Les évènements' }} name="EventsScreen" component={EventsScreen} />
-                    <RootStack.Screen options={{ title: 'L\'évènement en détail' }} name="EventScreen" component={EventScreen} />
-                </RootStack.Navigator>
+                <EventStackNavigator.Navigator initialRouteName="EventsScreen">
+                    <EventStackNavigator.Screen options={{ title: 'Les évènements' }} name="EventsScreen" component={EventsScreen} />
+                    <EventStackNavigator.Screen options={{ title: 'L\'évènement en détail' }} name="EventScreen" component={EventScreen} />
+                </EventStackNavigator.Navigator>
             </>
         )
     }
 
 
     function MainStack() {
-        const { data, isFetching, isLoading } = useGetCurrentProfileQuery();
+        // const { data: profile, isFetching, isLoading } = useGetCurrentProfileQuery();
 
         return (
-            <MainTab.Navigator initialRouteName="EventsStack">
+            <MainTab.Navigator initialRouteName='EventsStack'>
 
-                {(!isLoading && !data) ? <>
-                    <RootStack.Screen name="CreateProfileScreen" component={CreateProfileScreen} />
-                </> :
-                    <>
-                        <MainTab.Screen name="EventsStack" component={EventStack}
-                            options={{
-                                headerShown: false,
-                                tabBarLabel: "Événements",
-                                tabBarIcon: () => (
-                                    <MaterialIcons name="event-note" size={24} color="black" />
-                                ),
-                            }}
-                        />
-                        <MainTab.Screen name="EventCreationScreen" component={EventCreationScreen} />
+                <MainTab.Screen name="CreationProfileScreen" component={CreateProfileScreen} />
+                <MainTab.Screen name="EventsStack" component={EventStack}
+                    options={{
+                        headerShown: false,
+                        tabBarLabel: "Événements",
+                        tabBarIcon: () => (
+                            <MaterialIcons name="event-note" size={24} color="black" />
+                        ),
+                    }}
+                />
+                <MainTab.Screen name="EventCreationScreen" component={EventCreationScreen} />
 
-                        <MainTab.Screen name="ProfilScreen" component={ProfileScreen} options={{
-                            title: 'Profil',
-                            tabBarLabel: "Profil",
-                            tabBarIcon: () => (
-                                <MaterialCommunityIcons name="account" size={24} color="black" />
-                            ),
-                        }}
-                        />
-                    </>}
-
-            </MainTab.Navigator>
+                <MainTab.Screen name="ProfilScreen" component={ProfileScreen} options={{
+                    title: 'Profil',
+                    tabBarLabel: "Profil",
+                    tabBarIcon: () => (
+                        <MaterialCommunityIcons name="account" size={24} color="black" />
+                    ),
+                }}
+                />
+            </MainTab.Navigator >
         )
     }
 
@@ -114,7 +108,7 @@ export default function App() {
                         </>
                         : (<>
                             <RootStack.Screen name="LoginScreen" component={LoginScreen} />
-                            <RootStack.Screen name="SignIn" component={SignInScreen} />
+                            <RootStack.Screen name="SignInScreen" component={SignInScreen} />
                         </>)
                     }
                 </RootStack.Navigator>

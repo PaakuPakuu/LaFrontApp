@@ -1,12 +1,10 @@
-import {Text, TextInput, TouchableOpacity, StyleSheet, View, Button, Alert} from 'react-native';
-import {useCreateEventMutation} from "../store/supabaseApi";
-import {Tables, TablesInsert} from "../database.types";
-import React, {useState} from "react";
-import {supabase} from "../supabaseConfig";
-import {useNavigation} from "@react-navigation/native";
-import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {MainTabParamList} from "../App";
-import {RadioButton} from "react-native-paper";
+import { TextInput, StyleSheet, View, Button, Alert } from 'react-native';
+import { useCreateEventMutation } from "../store/supabaseApi";
+import React, { useState } from "react";
+import { supabase } from "../supabaseConfig";
+import { EventStackParamList, MainTabParamList } from "../App";
+import { TablesInsert } from '../models/customModels';
+import { useAppNavigation } from '../hooks';
 
 export function EventCreationScreen() {
     const [eventData, setEventData] = useState<TablesInsert<"Event">>({
@@ -20,11 +18,11 @@ export function EventCreationScreen() {
         picture: "",
     });
 
-    const [createEvent, {isLoading}] = useCreateEventMutation()
-    const navigation = useNavigation<NativeStackNavigationProp<MainTabParamList>>();
+    const [createEvent, { isLoading }] = useCreateEventMutation()
+    const navigation = useAppNavigation<EventStackParamList>();
 
     async function handleCreateEvent(eventData: TablesInsert<"Event">) {
-        const {data: {user}} = await supabase.auth.getUser()
+        const { data: { user } } = await supabase.auth.getUser()
 
         if (user) {
 
@@ -32,7 +30,7 @@ export function EventCreationScreen() {
 
             await createEvent(eventData).then(
                 () => {
-                    navigation.navigate('EventsScreen')
+                    navigation.navigate("EventsScreen");
                 }
             )
         } else {
@@ -45,7 +43,7 @@ export function EventCreationScreen() {
             <View style={styles.verticallySpaced}>
                 <TextInput
                     style={styles.input}
-                    onChangeText={(value) => setEventData(prevState => ({...prevState, address: value}))}
+                    onChangeText={(value) => setEventData(prevState => ({ ...prevState, address: value }))}
                     value={eventData.address || ''}
                     placeholder="Adresse"
                     autoCapitalize={'words'}
@@ -54,7 +52,7 @@ export function EventCreationScreen() {
             <View style={styles.verticallySpaced}>
                 <TextInput
                     style={styles.input}
-                    onChangeText={(value) => setEventData(prevState => ({...prevState, description: value}))}
+                    onChangeText={(value) => setEventData(prevState => ({ ...prevState, description: value }))}
                     value={eventData.description || ''}
                     placeholder="Description"
                     autoCapitalize={'words'}
@@ -63,14 +61,14 @@ export function EventCreationScreen() {
             <View style={styles.verticallySpaced}>
                 <TextInput
                     style={styles.input}
-                    onChangeText={(value) => setEventData(prevState => ({...prevState, title: value}))}
+                    onChangeText={(value) => setEventData(prevState => ({ ...prevState, title: value }))}
                     value={eventData.title || ''}
                     placeholder="Titre"
                     autoCapitalize={'words'}
                 />
             </View>
 
-            <Button title="Je créé mon event" disabled={isLoading} onPress={async () => handleCreateEvent(eventData)}/>
+            <Button title="Je créé mon event" disabled={isLoading} onPress={async () => handleCreateEvent(eventData)} />
 
         </>
     )
