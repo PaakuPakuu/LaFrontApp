@@ -9,7 +9,7 @@ import { supabase } from "./supabaseConfig";
 import { Session } from "@supabase/supabase-js";
 import ProfileScreen from './screens/ProfileScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { EventCreationScreen } from "./screens/EventCreationScreen";
 import { SignInScreen } from "./screens/SignInScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -78,7 +78,15 @@ export default function App() {
                         ),
                     }}
                 />
-                <MainTab.Screen name="EventCreationScreen" component={EventCreationScreen} />
+                <MainTab.Screen name="EventCreationScreen" component={EventCreationScreen} 
+                    options={{
+                        headerShown: false,
+                        tabBarLabel: "Créer un event",
+                        tabBarIcon: () => (
+                            <Ionicons name="create" size={24} color="black" />
+                        ),
+                    }}
+                />
 
                 <MainTab.Screen name="ProfilScreen" component={ProfileScreen} options={{
                     title: 'Profil',
