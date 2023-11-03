@@ -11,25 +11,25 @@ export interface Database {
         Tables: {
             Comment: {
                 Row: {
-                    author: string
+                    author: string | null
                     created_at: string
-                    event: number | null
+                    event: number
                     id: number
-                    text: string | null
+                    text: string
                 }
                 Insert: {
-                    author: string
+                    author?: string | null
                     created_at?: string
-                    event?: number | null
+                    event: number
                     id?: number
-                    text?: string | null
+                    text: string
                 }
                 Update: {
-                    author?: string
+                    author?: string | null
                     created_at?: string
-                    event?: number | null
+                    event?: number
                     id?: number
-                    text?: string | null
+                    text?: string
                 }
                 Relationships: [
                     {
@@ -56,7 +56,7 @@ export interface Database {
                     date: string
                     description: string | null
                     id: number
-                    picture: string
+                    picture: string | null
                     title: string
                     user: string
                 }
@@ -67,7 +67,7 @@ export interface Database {
                     date: string
                     description?: string | null
                     id?: number
-                    picture: string
+                    picture?: string | null
                     title: string
                     user: string
                 }
@@ -78,7 +78,7 @@ export interface Database {
                     date?: string
                     description?: string | null
                     id?: number
-                    picture?: string
+                    picture?: string | null
                     title?: string
                     user?: string
                 }
@@ -97,21 +97,21 @@ export interface Database {
                     created_at: string
                     event_id: number
                     id: number
-                    participation: Database["public"]["Enums"]["participations"] | null
+                    participation: Database["public"]["Enums"]["participations"]
                     user_id: number
                 }
                 Insert: {
                     created_at?: string
                     event_id: number
                     id?: number
-                    participation?: Database["public"]["Enums"]["participations"] | null
+                    participation: Database["public"]["Enums"]["participations"]
                     user_id: number
                 }
                 Update: {
                     created_at?: string
                     event_id?: number
                     id?: number
-                    participation?: Database["public"]["Enums"]["participations"] | null
+                    participation?: Database["public"]["Enums"]["participations"]
                     user_id?: number
                 }
                 Relationships: [
@@ -139,7 +139,7 @@ export interface Database {
                     instruments: Database["public"]["Enums"]["instruments"][] | null
                     lastname: string | null
                     nickname: string | null
-                    user: string | null
+                    user: string
                 }
                 Insert: {
                     created_at?: string
@@ -148,7 +148,7 @@ export interface Database {
                     instruments?: Database["public"]["Enums"]["instruments"][] | null
                     lastname?: string | null
                     nickname?: string | null
-                    user?: string | null
+                    user: string
                 }
                 Update: {
                     created_at?: string
@@ -157,7 +157,7 @@ export interface Database {
                     instruments?: Database["public"]["Enums"]["instruments"][] | null
                     lastname?: string | null
                     nickname?: string | null
-                    user?: string | null
+                    user?: string
                 }
                 Relationships: [
                     {
@@ -179,12 +179,12 @@ export interface Database {
         Enums: {
             event_categories: "contract" | "busk" | "internal"
             instruments:
-            | "sousaphone"
-            | "saxophone"
-            | "trombone"
-            | "battery"
-            | "trumpet"
-            | "tuba"
+                | "sousaphone"
+                | "saxophone"
+                | "trombone"
+                | "battery"
+                | "trumpet"
+                | "tuba"
             participations: "present" | "absent" | "maybe"
         }
         CompositeTypes: {

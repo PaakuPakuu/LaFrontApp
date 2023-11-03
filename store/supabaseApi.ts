@@ -6,7 +6,10 @@ import { UserEvent, EventComment, Profile } from '../models/customModels';
 export const supabaseApi = createApi({
     reducerPath: 'supabaseApi',
     baseQuery: fakeBaseQuery(),
-    tagTypes: ['Event'],
+    tagTypes: [
+        'Event',
+        'Comment'
+    ],
     endpoints: (builder) => ({
         fetchAllEvents: builder.query<UserEvent[], void>({
             queryFn: async () => {
@@ -17,6 +20,7 @@ export const supabaseApi = createApi({
 
                 return { data: Events as UserEvent[] };
             },
+            providesTags: ["Event"]
         }),
         getOneEvent: builder.query<UserEvent, number>({
             async queryFn(id) {
@@ -38,6 +42,7 @@ export const supabaseApi = createApi({
 
                 return { data: Comments as EventComment[] };
             },
+            providesTags: ['Comment'],
         }),
         getCurrentProfile: builder.query<Profile, void>({
             async queryFn() {
@@ -67,25 +72,38 @@ export const supabaseApi = createApi({
         }),
         createEvent: builder.mutation<UserEvent, UserEvent>({
             async queryFn(eventToInsert) {
-                const { data } = await supabase
+                const { data, error } = await supabase
                     .from('Event')
                     .insert(eventToInsert)
                     .select()
                     .single()
 
+                console.log(eventToInsert, error)
 
                 return { data: data as UserEvent }
             }
         }),
         addComment: builder.mutation<EventComment, EventComment>({
             async queryFn(commentToInsert) {
-                const { data } = await supabase
+                const { data, error } = await supabase
                     .from('Comment')
-                    .insert(commentToInsert)
+                    .insert([commentToInsert])
                     .select()
                     .single();
 
                 return { data: data as EventComment }
+            },
+            invalidatesTags: ['Comment']
+        }),
+        createProfile: builder.mutation<Tables<"Profile">, TablesInsert<"Profile">>({
+            async queryFn(profileToCreate) {
+                const { data, error } = await supabase
+                    .from('Profile')
+                    .insert(profileToCreate)
+                    .select()
+                    .single();
+
+                return { data: data as Tables<"Profile"> }
             }
         })
     })
@@ -98,5 +116,6 @@ export const {
     useGetOneEventQuery,
     useFetchAllCommentariesPerEventQuery,
     useCreateEventMutation,
-    useAddCommentMutation
+    useAddCommentMutation,
+    useCreateProfileMutation
 } = supabaseApi
