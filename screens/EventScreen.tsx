@@ -1,6 +1,7 @@
 import { useRoute } from "@react-navigation/native";
 import { EventDetailsComments } from "../components/EventDetails/EventDetailsComments";
 import { UserEvent } from "../models/customModels";
+import { EventDetails } from "../components/EventDetails/EventDetails";
 
 export function EventScreen() {
     const route = useRoute()
@@ -8,7 +9,7 @@ export function EventScreen() {
 
     return (
         <>
-            <EventDetailsComments event={event} />
+            <EventDetails event={event}/>
         </>
     )
 }

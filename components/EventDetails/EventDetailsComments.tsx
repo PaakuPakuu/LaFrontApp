@@ -1,4 +1,4 @@
-import {Alert, Button, FlatList, StyleSheet, Text, TextInput, View} from "react-native";
+import {Alert, Button, FlatList, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
 import {
     useAddCommentMutation,
     useFetchAllCommentariesPerEventQuery, useGetCurrentProfileQuery
@@ -44,8 +44,9 @@ export function EventDetailsComments({event}: Props) {
     }
 
     return (
-        <>
-            <Text style={{textAlign: 'center', fontSize: 24}}>
+        <View style={styles.commentContainer}>
+        {/* <> */}
+            <Text style={{textAlign: 'left', fontSize: 24}}>
                 Commentaires :
             </Text>
 
@@ -69,7 +70,8 @@ export function EventDetailsComments({event}: Props) {
                 <Button title="Commenter" disabled={isLoading} onPress={async () => handleCreateComment(commentData)}/>
             </View>
 
-        </>
+        {/* </> */}
+        </View>
     )
 }
 
@@ -94,4 +96,8 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         paddingRight: 5,
     },
+
+    commentContainer: {
+        padding: 10, 
+      },
 })
