@@ -1,18 +1,20 @@
-import {supabaseApi, useGetCurrentProfileQuery, useGetUserEventsQuery} from "../store/supabaseApi";
-import {View, Text, FlatList, TouchableOpacity, Alert, Button, Image, StyleSheet} from "react-native";
-import {Instrument} from "../components/Profile/Instrument";
-import {ProfileEvents} from "../components/Profile/ProfileEvents";
-import {supabase} from "../supabaseConfig";
-import React from "react";
-import {useDispatch} from "react-redux";
-import {useAppDispatch} from "../hooks";
+import { supabaseApi, useGetCurrentProfileQuery } from "../store/supabaseApi";
+import { View, Text, FlatList, Alert, Button, Image, StyleSheet } from "react-native";
+import { Instrument } from "../components/Profile/Instrument";
+import { ProfileEvents } from "../components/Profile/ProfileEvents";
+import { supabase } from "../supabaseConfig";
+import { useState } from "react";
+import { EditProfileModal } from "../components/editProfileModal/EditProfileModal";
+import { useAppDispatch } from "../hooks";
 
 export default function () {
-    const {data, isFetching, isLoading} = useGetCurrentProfileQuery();
+    const { data: profile, isFetching } = useGetCurrentProfileQuery();
+
+    const [modalVisible, setModalVisible] = useState(false);
     const dispatch = useAppDispatch()
 
     async function logOut() {
-        const {error} = await supabase.auth.signOut()
+        const { error } = await supabase.auth.signOut()
 
         if (error) Alert.alert('Apparemment tu peux pas te déco, mais c\'est pas grave non ?')
 
@@ -20,30 +22,39 @@ export default function () {
     }
 
     return (<>
-        {!isLoading && data && <View style={styles.container}>
+        {!isFetching && profile && <View style={styles.container}>
             <View style={styles.mainContainer}>
-                <Image source={{uri: "https://placehold.co/80x80/png"}} style={styles.picture}/>
-                <View style={styles.nameContainer}>
-                    <Text style={styles.nickname}>
-                        {data.nickname}
-                    </Text>
-                    <Text>
-                        {data.firstname}{data.lastname}
-                    </Text>
+                <EditProfileModal
+                    visible={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                    profile={profile}
+                />
+
+                <Image source={{ uri: "https://placehold.co/80x80/png" }} style={styles.picture} />
+                <View style={styles.topContainer}>
+                    <View style={styles.nameContainer}>
+                        <Text style={styles.nickname}>
+                            {profile.nickname}
+                        </Text>
+                        <Text>
+                            {profile.firstname}{profile.lastname}
+                        </Text>
+                    </View>
+                    <Button title="Éditer" onPress={() => setModalVisible(true)} />
                 </View>
 
             </View>
 
             <FlatList
-                data={data.instruments}
-                renderItem={({item}) =>
-                    <Instrument instrument={item}/>
+                data={profile.instruments}
+                renderItem={({ item }) =>
+                    <Instrument instrument={item} />
                 }
             />
 
-            <ProfileEvents/>
+            <ProfileEvents />
 
-            <Button title="Déconnexion" disabled={isLoading} onPress={async () => logOut()}/>
+            <Button title="Déconnexion" disabled={isFetching} onPress={async () => logOut()} />
         </View>}
     </>)
 }
@@ -61,11 +72,20 @@ const styles = StyleSheet.create({
     mainContainer: {
         flexDirection: 'row'
     },
+    topContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
     nameContainer: {
         flexDirection: 'column',
         marginLeft: 15
     },
     nickname: {
         fontSize: 18
+    },
+    modal: {
+
     }
 });

@@ -16,7 +16,6 @@ export const EventItem = ({event}: Props) => {
     const userProfile = useGetCurrentProfileQuery();
     const userParticipation = event.participations.find(p => p.user_id === userProfile.data?.id)?.participation;
 
-
     const handlePress = () => {
         navigation.navigate('EventScreen', event);
     }
