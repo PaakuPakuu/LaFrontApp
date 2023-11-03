@@ -1,6 +1,6 @@
 import {useRoute} from "@react-navigation/native";
 import {useGetOneEventQuery} from "../store/supabaseApi";
-import {EventComments} from "../components/Event/EventComments";
+import {EventDetailsComments} from "../components/EventDetails/EventDetailsComments";
 
 export function EventScreen() {
     const route = useRoute()
@@ -8,7 +8,7 @@ export function EventScreen() {
 
     return(
         <>
-            <EventComments eventId={id} />
+            <EventDetailsComments eventId={id} />
         </>
     )
 }
