@@ -1,10 +1,13 @@
-import { TextInput, StyleSheet, View, Button, Alert } from 'react-native';
-import { useCreateEventMutation } from "../store/supabaseApi";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
+import format from 'date-fns/format';
 import React, { useState } from "react";
-import { supabase } from "../supabaseConfig";
-import { EventStackParamList, MainTabParamList } from "../App";
-import { TablesInsert } from '../models/customModels';
+import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { EventStackParamList } from "../App";
 import { useAppNavigation } from '../hooks';
+import { TablesInsert } from '../models/customModels';
+import { useCreateEventMutation } from "../store/supabaseApi";
+import { supabase } from "../supabaseConfig";
 
 export function EventCreationScreen() {
     const [eventData, setEventData] = useState<TablesInsert<"Event">>({
@@ -17,6 +20,7 @@ export function EventCreationScreen() {
         date: new Date().toString(),
         picture: "",
     });
+
 
     const [createEvent, { isLoading }] = useCreateEventMutation()
     const navigation = useAppNavigation<EventStackParamList>();
@@ -40,6 +44,17 @@ export function EventCreationScreen() {
 
     return (
         <>
+
+            <View style={styles.verticallySpaced}>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={(value) => setEventData(prevState => ({ ...prevState, title: value }))}
+                    value={eventData.title || ''}
+                    placeholder="Titre"
+                    autoCapitalize={'words'}
+                />
+            </View>
+
             <View style={styles.verticallySpaced}>
                 <TextInput
                     style={styles.input}
@@ -61,15 +76,42 @@ export function EventCreationScreen() {
             <View style={styles.verticallySpaced}>
                 <TextInput
                     style={styles.input}
-                    onChangeText={(value) => setEventData(prevState => ({ ...prevState, title: value }))}
-                    value={eventData.title || ''}
-                    placeholder="Titre"
-                    autoCapitalize={'words'}
+                    value={eventData.category}
+                />
+                <Picker
+                    style={styles.picker}
+                    selectedValue={eventData.category}
+                    onValueChange={(value: any) =>
+                        setEventData((prevState) => ({ ...prevState, category: value }))
+                    }>
+                    <Picker.Item label="Contract" value="contract" />
+                    <Picker.Item label="Busk" value="busk" />
+                    <Picker.Item label="Internal" value="internal" />
+                </Picker>
+            </View>
+            <View style={styles.verticallySpaced}>
+                <Text style={styles.textDate}>Sélectionnez une date</Text>
+                <DateTimePicker
+                    style={styles.date}
+                    value={new Date(eventData.date)}
+                    mode="datetime"
+                    onChange={(event, selectedDate) => {
+                        if (selectedDate) {
+                            const formattedDate = format(selectedDate, 'yyyy-MM-dd HH:mm:ss');
+                            setEventData((prevState) => ({ ...prevState, date: formattedDate }));
+                        }
+                    }
+                    }
                 />
             </View>
 
-            <Button title="Je créé mon event" disabled={isLoading} onPress={async () => handleCreateEvent(eventData)} />
-
+            <View style={styles.button}>
+                <Button
+                    title="Créer l'Event"
+                    disabled={isLoading}
+                    color="black"
+                    onPress={async () => handleCreateEvent(eventData)} />
+            </View>
         </>
     )
 }
@@ -81,7 +123,7 @@ const styles = StyleSheet.create({
         padding: 12,
     },
     verticallySpaced: {
-        paddingTop: 4,
+        paddingTop: 10,
         paddingBottom: 4,
         alignSelf: 'stretch',
     },
@@ -98,4 +140,29 @@ const styles = StyleSheet.create({
         width: 330,
         alignSelf: 'center',
     },
+
+    date: {
+        position: 'relative',
+        bottom: 60,
+        marginRight: 5,
+    },
+
+    textDate: {
+        position: 'relative',
+        bottom: 35,
+        marginLeft: 5,
+    },
+
+    button: {
+        backgroundColor: 'lightgray',
+        borderRadius: 30,
+        padding: 10,
+        color: 'white',
+        margin: 10,
+    },
+
+    picker: {
+        position:'relative',
+        bottom: 50,
+    }
 })
