@@ -1,17 +1,22 @@
-import {useGetCurrentProfileQuery, useGetUserEventsQuery} from "../store/supabaseApi";
+import {supabaseApi, useGetCurrentProfileQuery, useGetUserEventsQuery} from "../store/supabaseApi";
 import {View, Text, FlatList, TouchableOpacity, Alert, Button, Image, StyleSheet} from "react-native";
 import {Instrument} from "../components/Profile/Instrument";
 import {ProfileEvents} from "../components/Profile/ProfileEvents";
 import {supabase} from "../supabaseConfig";
 import React from "react";
+import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../hooks";
 
 export default function () {
     const {data, isFetching, isLoading} = useGetCurrentProfileQuery();
+    const dispatch = useAppDispatch()
 
     async function logOut() {
         const {error} = await supabase.auth.signOut()
 
         if (error) Alert.alert('Apparemment tu peux pas te déco, mais c\'est pas grave non ?')
+
+        dispatch(supabaseApi.util.invalidateTags(['Profile']));
     }
 
     return (<>

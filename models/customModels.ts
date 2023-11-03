@@ -1,4 +1,4 @@
-import { Database } from "./databaseModel";
+import {Database} from "./databaseModel";
 
 type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
 export type TablesInsert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert'];
@@ -11,6 +11,8 @@ export type UserEvent = Tables<"Event"> & {
     participations: Participation[];
 };
 
-export type EventComment = Tables<"Comment">;
+export type EventComment = Tables<"Comment"> & {
+    profile: Profile;
+};
 
 export type Participation = Tables<"Participation">;
