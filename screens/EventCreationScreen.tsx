@@ -1,14 +1,13 @@
-import { TextInput, StyleSheet, View, Button, Alert, Text } from 'react-native';
-import { useCreateEventMutation } from "../store/supabaseApi";
-import React, { useState } from "react";
-import { supabase } from "../supabaseConfig";
-import { EventStackParamList, MainTabParamList } from "../App";
-import { Enums, TablesInsert } from '../models/customModels';
-import { useAppNavigation } from '../hooks';
-import format from 'date-fns/format';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import { white } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
+import format from 'date-fns/format';
+import React, { useState } from "react";
+import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { EventStackParamList } from "../App";
+import { useAppNavigation } from '../hooks';
+import { TablesInsert } from '../models/customModels';
+import { useCreateEventMutation } from "../store/supabaseApi";
+import { supabase } from "../supabaseConfig";
 
 export function EventCreationScreen() {
     const [eventData, setEventData] = useState<TablesInsert<"Event">>({
@@ -22,7 +21,6 @@ export function EventCreationScreen() {
         picture: "",
     });
 
-    // const type: Enums<"event_categories"> = "";
 
     const [createEvent, { isLoading }] = useCreateEventMutation()
     const navigation = useAppNavigation<EventStackParamList>();
@@ -81,6 +79,7 @@ export function EventCreationScreen() {
                     value={eventData.category}
                 />
                 <Picker
+                    style={styles.picker}
                     selectedValue={eventData.category}
                     onValueChange={(value: any) =>
                         setEventData((prevState) => ({ ...prevState, category: value }))
@@ -96,8 +95,6 @@ export function EventCreationScreen() {
                     style={styles.date}
                     value={new Date(eventData.date)}
                     mode="datetime"
-                    // placeholderText='Sélectionnez une date'
-                    // format="YYYY-MM-DD"
                     onChange={(event, selectedDate) => {
                         if (selectedDate) {
                             const formattedDate = format(selectedDate, 'yyyy-MM-dd HH:mm:ss');
@@ -146,13 +143,13 @@ const styles = StyleSheet.create({
 
     date: {
         position: 'relative',
-        bottom: 80,
+        bottom: 60,
         marginRight: 5,
     },
 
     textDate: {
         position: 'relative',
-        bottom: 53,
+        bottom: 35,
         marginLeft: 5,
     },
 
@@ -162,5 +159,10 @@ const styles = StyleSheet.create({
         padding: 10,
         color: 'white',
         margin: 10,
+    },
+
+    picker: {
+        position:'relative',
+        bottom: 50,
     }
 })
