@@ -70,7 +70,8 @@ export const supabaseApi = createApi({
                     .eq('user', user!.id);
 
                 return { data: Events as UserEvent[] };
-            }
+            },
+            providesTags: ['Event']
         }),
         createEvent: builder.mutation<TablesInsert<"Event">, TablesInsert<"Event">>({
             async queryFn(eventToInsert) {

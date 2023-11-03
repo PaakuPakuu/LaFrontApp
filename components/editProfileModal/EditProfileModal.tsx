@@ -58,6 +58,7 @@ export const EditProfileModal = ({ profile, visible, onClose }: Props) => {
                         value={profileData.firstname || ''}
                         placeholder="Prénom"
                         autoCapitalize={'words'}
+                        placeholderTextColor={'#aaa'}
                     />
                 </View>
                 <View style={styles.verticallySpaced}>
@@ -67,6 +68,7 @@ export const EditProfileModal = ({ profile, visible, onClose }: Props) => {
                         value={profileData.lastname || ''}
                         placeholder="Nom de famille"
                         autoCapitalize={'words'}
+                        placeholderTextColor={'#aaa'}
                     />
                 </View>
                 <View style={styles.verticallySpaced}>
@@ -76,6 +78,7 @@ export const EditProfileModal = ({ profile, visible, onClose }: Props) => {
                         value={profileData.nickname || ''}
                         placeholder="Surnom"
                         autoCapitalize={'words'}
+                        placeholderTextColor={'#aaa'}
                     />
                 </View>
 

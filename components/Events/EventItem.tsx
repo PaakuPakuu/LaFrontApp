@@ -1,20 +1,27 @@
-import {TouchableOpacity, Text, StyleSheet, View} from "react-native";
-import {useGetCurrentProfileQuery} from "../../store/supabaseApi";
-import {Feather} from "@expo/vector-icons";
-import {UserEvent} from "../../models/customModels";
-import {useAppNavigation} from "../../hooks";
-import {CategoryBadge} from "../badge/CategoryBadge";
-import {EventStackParamList} from "../../App";
+import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
+import { useGetCurrentProfileQuery } from "../../store/supabaseApi";
+import { Feather } from "@expo/vector-icons";
+import { UserEvent } from "../../models/customModels";
+import { useAppNavigation } from "../../hooks";
+import { CategoryBadge } from "../badge/CategoryBadge";
+import { EventStackParamList } from "../../App";
 
 interface Props {
     event: UserEvent;
 }
 
-export const EventItem = ({event}: Props) => {
+export const EventItem = ({ event }: Props) => {
     const navigation = useAppNavigation<EventStackParamList>();
 
     const userProfile = useGetCurrentProfileQuery();
-    const userParticipation = event.participations.find(p => p.user_id === userProfile.data?.id)?.participation;
+    const userParticipation = event.participations?.find(p => p.user_id === userProfile.data?.id)?.participation ?? [];
+
+    const eventDate = new Date(event.created_at).toLocaleDateString(undefined, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
 
     const handlePress = () => {
         navigation.navigate('EventScreen', event);
@@ -27,29 +34,29 @@ export const EventItem = ({event}: Props) => {
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <View style={styles.titlesContainer}>
-                        {userParticipation !== undefined ? (
+                        {userParticipation !== undefined && userParticipation.length > 0 ? (
                             userParticipation === "present" ? (
-                                <Feather name="check-circle" size={24} color="green"/>
+                                <Feather name="check-circle" size={24} color="green" />
                             ) : (
                                 userParticipation === "absent" ? (
-                                    <Feather name="x-circle" size={24} color="red"/>
+                                    <Feather name="x-circle" size={24} color="red" />
                                 ) : (
-                                    <Feather name="minus-circle" size={24} color="blue"/>
+                                    <Feather name="minus-circle" size={24} color="blue" />
                                 )
                             )) : (
-                            <Feather name="circle" size={24} color="grey"/>
+                            <Feather name="circle" size={24} color="grey" />
                         )}
                         <Text>{event.title}</Text>
                     </View>
-                    <CategoryBadge category={event.category}/>
+                    <CategoryBadge category={event.category} />
                 </View>
                 <View style={styles.bottomContainer}>
                     <Text>{event.address}</Text>
-                    <Text>{new Date(event.date).toDateString()}</Text>
+                    <Text>{eventDate}</Text>
                 </View>
             </View>
 
-        </TouchableOpacity>
+        </TouchableOpacity >
     );
 };
 

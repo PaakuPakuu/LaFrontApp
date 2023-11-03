@@ -9,15 +9,15 @@ export const CategoryBadge = ({ category }: Props) => {
     switch (category) {
         case "contract":
             return (
-                <Badge title="Contrat" color="#FFC107" />
+                <Badge title="Contrat" color="#F44336" whiteText />
             );
         case "busk":
             return (
-                <Badge title="Manche" color="#FF9800" />
+                <Badge title="Manche" color="#4CAF50" whiteText />
             );
         case "internal":
             return (
-                <Badge title="Interne" color="#FF5722" />
+                <Badge title="Interne" color="#2196F3" whiteText />
             );
     }
 }
