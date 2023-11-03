@@ -1,14 +1,15 @@
-import {useRoute} from "@react-navigation/native";
-import {useGetOneEventQuery} from "../store/supabaseApi";
-import {EventComments} from "../components/Event/EventComments";
+import { useRoute } from "@react-navigation/native";
+import { EventDetailsComments } from "../components/EventDetails/EventDetailsComments";
+import { UserEvent } from "../models/customModels";
+import { EventDetails } from "../components/EventDetails/EventDetails";
 
 export function EventScreen() {
     const route = useRoute()
-    const id: number = route.params as unknown as number;
+    const  event = route.params as UserEvent
 
-    return(
+    return (
         <>
-            <EventComments eventId={id} />
+            <EventDetails event={event}/>
         </>
     )
 }

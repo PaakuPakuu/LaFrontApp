@@ -3,12 +3,13 @@ import { View, Text, StyleSheet } from "react-native";
 interface Props {
     title: string;
     color: string;
+    whiteText?: boolean;
 }
 
-export const Badge = ({ title, color }: Props) => {
+export const Badge = ({ title, color, whiteText = false }: Props) => {
     return (
         <View style={{ ...styles.container, backgroundColor: color }}>
-            <Text>{title}</Text>
+            <Text style={{ color: whiteText ? "#fff" : "#000" }}>{title}</Text>
         </View>
     );
 };

@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
-import {Alert, Button, StyleSheet, TextInput, View} from 'react-native'
-import {supabase} from "../supabaseConfig";
+import { Alert, Button, StyleSheet, TextInput, View } from 'react-native'
+import { supabase } from "../supabaseConfig";
+import { RootStackParamList } from "../App";
+import { useAppNavigation } from '../hooks';
 
-export default function Login() {
+export default function LoginScreen() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
+
+    const navigation = useAppNavigation<RootStackParamList>();
 
     async function signInWithEmail() {
         setLoading(true)
@@ -14,22 +18,12 @@ export default function Login() {
             password: password,
         })
 
-        if (error) Alert.alert(error.message)
-        setLoading(false)
-    }
-
-    async function signUpWithEmail() {
-        setLoading(true)
-        const {
-            data: { session },
-            error,
-        } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-        })
-
-        if (error) Alert.alert(error.message)
-        if (!session) Alert.alert('Please check your inbox for email verification!')
+        if (error) {
+            Alert.alert(error.message)
+        } else {
+            Alert.alert('Connexion réussie!');
+            navigation.navigate('MainStack');
+        }
         setLoading(false)
     }
 
@@ -37,6 +31,7 @@ export default function Login() {
         <View style={styles.container}>
             <View style={[styles.verticallySpaced, styles.mt20]}>
                 <TextInput
+                    style={styles.input}
                     onChangeText={(text) => setEmail(text)}
                     value={email}
                     placeholder="email@address.com"
@@ -45,6 +40,7 @@ export default function Login() {
             </View>
             <View style={styles.verticallySpaced}>
                 <TextInput
+                    style={styles.input}
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     secureTextEntry={true}
@@ -53,10 +49,13 @@ export default function Login() {
                 />
             </View>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+                <Button title="Se connecter" disabled={loading} onPress={() => signInWithEmail()} />
             </View>
             <View style={styles.verticallySpaced}>
-                <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+                <TextInput>
+                    Vous n'avez pas de compte ?
+                </TextInput>
+                <Button title="S'inscrire" disabled={loading} onPress={() => navigation.navigate('SignInScreen')} />
             </View>
         </View>
     )
@@ -74,5 +73,15 @@ const styles = StyleSheet.create({
     },
     mt20: {
         marginTop: 20,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        backgroundColor: 'white',
+        paddingHorizontal: 10,
+        borderRadius: 55,
+        height: 40,
+        width: 330,
+        alignSelf: 'center',
     },
 })
