@@ -1,6 +1,6 @@
 import {Alert, Button, StyleSheet, TextInput, View} from "react-native";
 import React, {useState} from "react";
-import {Tables} from "../database.types";
+import {Tables, TablesInsert} from "../database.types";
 import {supabase} from "../supabaseConfig";
 import {useCreateProfileMutation} from "../store/supabaseApi";
 import {useNavigation} from "@react-navigation/native";
@@ -10,7 +10,7 @@ import {MainTabParamList} from "../App";
 export function CreateProfileScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<MainTabParamList>>();
 
-    const [profileData, setProfileData] = useState<Tables<"Profile">>({
+    const [profileData, setProfileData] = useState<TablesInsert<"Profile">>({
         created_at: new Date().toString(),
         firstname: "",
         instruments: null,
@@ -21,17 +21,17 @@ export function CreateProfileScreen() {
 
     const [createProfile, {isLoading}] = useCreateProfileMutation()
 
-    async function handleCreateProfile(profileData: Tables<"Profile">) {
+    async function handleCreateProfile(profileData: TablesInsert<"Profile">) {
         const {data: {user}} = await supabase.auth.getUser()
 
         if (user) {
-            setProfileData(prevState => ({...prevState, user: user.id}))
 
-            await createProfile(profileData);
+            profileData.user = user.id.toString();
 
-            if (!isLoading) {
-                navigation.navigate('MainStack', {screen: 'EventsScreen'})
-            }
+            await createProfile(profileData).then(()=> {
+                navigation.navigate('MainStack', {screen: 'ProfilScreen'})
+            })
+
         } else {
             Alert.alert('Euh wtf ?')
         }
