@@ -1,10 +1,9 @@
-import {Alert, Button, FlatList, StyleSheet, Text, TextInput, View} from "react-native";
+import {Alert, Button, FlatList, RefreshControl, StyleSheet, Text, TextInput, View} from "react-native";
 import {
     useAddCommentMutation,
     useFetchAllCommentariesPerEventQuery, useGetCurrentProfileQuery
 } from "../../store/supabaseApi";
 import React, {useState} from "react";
-import {supabase} from "../../supabaseConfig";
 import {TablesInsert, UserEvent} from "../../models/customModels";
 import {EventDetailsComment} from "./EventDetailsComment";
 
@@ -13,8 +12,9 @@ type Props = {
 }
 
 export function EventDetailsComments({event}: Props) {
-    const {data, isLoading} = useFetchAllCommentariesPerEventQuery(event.id);
+    const {data, isLoading, refetch} = useFetchAllCommentariesPerEventQuery(event.id);
     const {data: profile} = useGetCurrentProfileQuery();
+    const [refreshing, setRefreshing] = useState(false);
 
 
     const [commentData, setCommentData] = useState<TablesInsert<"Comment">>({
@@ -54,6 +54,9 @@ export function EventDetailsComments({event}: Props) {
                 data={data}
                 renderItem={({item}) =>
                     <EventDetailsComment comment={item}/>
+                }
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={() => refetch()}/>
                 }
             />
 

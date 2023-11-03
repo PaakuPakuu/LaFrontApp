@@ -1,16 +1,21 @@
-import { FlatList, View, Text, StyleSheet } from "react-native";
+import { FlatList, View, Text, StyleSheet, RefreshControl } from "react-native";
 
-import { useFetchAllEventsQuery, useGetCurrentProfileQuery } from "../store/supabaseApi";
+import { supabaseApi, useFetchAllEventsQuery, useGetCurrentProfileQuery } from "../store/supabaseApi";
 import { EventItem } from "../components/Events/EventItem";
 import { EventCard } from "../components/Events/EventCard";
 import { EditProfileModal } from "../components/editProfileModal/EditProfileModal";
 import { useEffect, useState } from "react";
+import { useAppDispatch } from "../hooks";
+import { supabase } from "../supabaseConfig";
 
 export function EventsScreen() {
-    const { data: events, isError, isFetching: isEventFetching } = useFetchAllEventsQuery();
+    const { data: events, isError, isFetching: isEventFetching, refetch } = useFetchAllEventsQuery();
     const { data: profile, isFetching: isProfileFetching } = useGetCurrentProfileQuery();
 
+    const [refreshing, setRefreshing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
+
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (!profile && !isProfileFetching) {
@@ -36,6 +41,9 @@ export function EventsScreen() {
                             <EventItem event={item} />
                         }
                         keyExtractor={item => item.id.toString()}
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={() => refetch()} />
+                        }
                         style={styles.list}
                     />
                 </>)
