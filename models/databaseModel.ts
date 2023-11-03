@@ -11,21 +11,21 @@ export interface Database {
         Tables: {
             Comment: {
                 Row: {
-                    author: string | null
+                    author: number | null
                     created_at: string
                     event: number
                     id: number
                     text: string
                 }
                 Insert: {
-                    author?: string | null
+                    author?: number | null
                     created_at?: string
                     event: number
                     id?: number
                     text: string
                 }
                 Update: {
-                    author?: string | null
+                    author?: number | null
                     created_at?: string
                     event?: number
                     id?: number
@@ -36,7 +36,7 @@ export interface Database {
                         foreignKeyName: "Comment_author_fkey"
                         columns: ["author"]
                         isOneToOne: false
-                        referencedRelation: "users"
+                        referencedRelation: "Profile"
                         referencedColumns: ["id"]
                     },
                     {

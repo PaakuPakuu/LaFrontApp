@@ -1,16 +1,16 @@
-import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
-import { useGetCurrentProfileQuery } from "../../store/supabaseApi";
-import { Feather } from "@expo/vector-icons";
-import { UserEvent } from "../../models/customModels";
-import { useAppNavigation } from "../../hooks";
-import { CategoryBadge } from "../badge/CategoryBadge";
-import { EventStackParamList } from "../../App";
+import {TouchableOpacity, Text, StyleSheet, View} from "react-native";
+import {useGetCurrentProfileQuery} from "../../store/supabaseApi";
+import {Feather} from "@expo/vector-icons";
+import {UserEvent} from "../../models/customModels";
+import {useAppNavigation} from "../../hooks";
+import {CategoryBadge} from "../badge/CategoryBadge";
+import {EventStackParamList} from "../../App";
 
 interface Props {
     event: UserEvent;
 }
 
-export const EventItem = ({ event }: Props) => {
+export const EventItem = ({event}: Props) => {
     const navigation = useAppNavigation<EventStackParamList>();
 
     const userProfile = useGetCurrentProfileQuery();
@@ -18,32 +18,31 @@ export const EventItem = ({ event }: Props) => {
 
 
     const handlePress = () => {
-        navigation.navigate('EventScreen', { event });
+        navigation.navigate('EventScreen', event);
     }
 
     return (
         <TouchableOpacity
             onPress={handlePress}
-
         >
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <View style={styles.titlesContainer}>
                         {userParticipation !== undefined ? (
                             userParticipation === "present" ? (
-                                <Feather name="check-circle" size={24} color="green" />
+                                <Feather name="check-circle" size={24} color="green"/>
                             ) : (
                                 userParticipation === "absent" ? (
-                                    <Feather name="x-circle" size={24} color="red" />
+                                    <Feather name="x-circle" size={24} color="red"/>
                                 ) : (
-                                    <Feather name="minus-circle" size={24} color="blue" />
+                                    <Feather name="minus-circle" size={24} color="blue"/>
                                 )
                             )) : (
-                            <Feather name="circle" size={24} color="grey" />
+                            <Feather name="circle" size={24} color="grey"/>
                         )}
                         <Text>{event.title}</Text>
                     </View>
-                    <CategoryBadge category={event.category} />
+                    <CategoryBadge category={event.category}/>
                 </View>
                 <View style={styles.bottomContainer}>
                     <Text>{event.address}</Text>
