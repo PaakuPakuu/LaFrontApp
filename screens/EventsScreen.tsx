@@ -1,24 +1,32 @@
-import { FlatList, View, Text, StyleSheet } from "react-native";
+import {FlatList, View, Text, StyleSheet, RefreshControl} from "react-native";
 
-import { useFetchAllEventsQuery } from "../store/supabaseApi";
-import { EventItem } from "../components/Events/EventItem";
-import { EventCard } from "../components/Events/EventCard";
+import {supabaseApi, useFetchAllEventsQuery} from "../store/supabaseApi";
+import {EventItem} from "../components/Events/EventItem";
+import {EventCard} from "../components/Events/EventCard";
+import {useAppDispatch} from "../hooks";
+import {supabase} from "../supabaseConfig";
+import {useState} from "react";
 
 export function EventsScreen() {
-    const { data, isFetching, isLoading, isError } = useFetchAllEventsQuery();
+    const {data, isFetching, isLoading, isError, refetch} = useFetchAllEventsQuery();
+    const dispatch = useAppDispatch()
+    const [refreshing, setRefreshing] = useState(false);
 
     return (
         <View style={styles.container}>
             {!isLoading && data && (
                 <>
-                    <EventCard event={data[0]} />
+                    <EventCard event={data[0]}/>
                     <FlatList
                         data={data.slice(1)}
                         numColumns={1}
-                        renderItem={({ item }) =>
-                            <EventItem event={item} />
+                        renderItem={({item}) =>
+                            <EventItem event={item}/>
                         }
                         keyExtractor={item => item.id.toString()}
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={() => refetch()}/>
+                        }
                         style={styles.list}
                     />
                 </>)
