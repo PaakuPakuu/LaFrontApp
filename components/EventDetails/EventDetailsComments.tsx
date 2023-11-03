@@ -1,4 +1,4 @@
-import {Alert, Button, FlatList, RefreshControl, StyleSheet, Text, TextInput, View} from "react-native";
+import {Alert, Button, FlatList, RefreshControl, StyleSheet, Text, TextInput, View, Modal} from "react-native";
 import {
     useAddCommentMutation,
     useFetchAllCommentariesPerEventQuery, useGetCurrentProfileQuery
@@ -15,6 +15,7 @@ export function EventDetailsComments({event}: Props) {
     const {data, isLoading, refetch} = useFetchAllCommentariesPerEventQuery(event.id);
     const {data: profile} = useGetCurrentProfileQuery();
     const [refreshing, setRefreshing] = useState(false);
+    const [isModalVisible, setModalVisible] = useState(false);
 
 
     const [commentData, setCommentData] = useState<TablesInsert<"Comment">>({
@@ -43,9 +44,13 @@ export function EventDetailsComments({event}: Props) {
         }
     }
 
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    }
+
     return (
-        <>
-            <Text style={{textAlign: 'center', fontSize: 24}}>
+        <View style={styles.commentContainer}>
+            <Text style={{textAlign: 'left', fontSize: 24}}>
                 Commentaires :
             </Text>
 
@@ -72,12 +77,13 @@ export function EventDetailsComments({event}: Props) {
                 <Button title="Commenter" disabled={isLoading} onPress={async () => handleCreateComment(commentData)}/>
             </View>
 
-        </>
+        </View>
     )
 }
 
 
 const styles = StyleSheet.create({
+    
     horizontallySpaced: {
         paddingTop: 4,
         paddingBottom: 4,
@@ -96,5 +102,13 @@ const styles = StyleSheet.create({
     commentWrapper: {
         paddingLeft: 5,
         paddingRight: 5,
+    },
+
+    commentContainer: {
+        padding: 10,
+        position: 'absolute',
+        bottom: -425,
+        left: 0,
+        right: 0,
     },
 })
